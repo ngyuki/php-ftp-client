@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<phpunit
+	bootstrap="bootstrap.php"
+>
+
+	<groups>
+	  <exclude>
+			<group>posix</group>
+			<group>realserver</group>
+	  </exclude>
+	</groups>
+	
+	<filter>
+	  <whitelist addUncoveredFilesFromWhitelist="true">
+	    <directory suffix=".php">../class/</directory>
+	  </whitelist>
+	</filter>
+</phpunit>
