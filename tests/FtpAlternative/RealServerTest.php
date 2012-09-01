@@ -5,14 +5,14 @@
  */
 class FtpAlternative_RealServerTest extends PHPUnit_Framework_TestCase implements FtpAlternative_RealServerTest_Config
 {
-	function init_empty(FtpAlternative $ftp)
+	function init_empty(FtpAlternative_FtpClient $ftp)
 	{
 		$this->rmdir_f($ftp, __CLASS__);
 		$ftp->mkdir(__CLASS__);
 		$ftp->chdir(__CLASS__);
 	}
 	
-	public function rmdir_f(FtpAlternative $ftp, $dir)
+	public function rmdir_f(FtpAlternative_FtpClient $ftp, $dir)
 	{
 		try
 		{
@@ -51,7 +51,7 @@ class FtpAlternative_RealServerTest extends PHPUnit_Framework_TestCase implement
 	 */
 	function success()
 	{
-		$ftp = new FtpAlternative();
+		$ftp = new FtpAlternative_FtpClient();
 		
 		try
 		{
@@ -176,7 +176,7 @@ class FtpAlternative_RealServerTest extends PHPUnit_Framework_TestCase implement
 	 */
 	function connect_errors()
 	{
-		$ftp = new FtpAlternative();
+		$ftp = new FtpAlternative_FtpClient();
 		
 		try
 		{
@@ -206,7 +206,7 @@ class FtpAlternative_RealServerTest extends PHPUnit_Framework_TestCase implement
 	 */
 	function login_errors()
 	{
-		$ftp = new FtpAlternative();
+		$ftp = new FtpAlternative_FtpClient();
 		
 		$ftp->connect(self::HOST, self::PORT, 5);
 		

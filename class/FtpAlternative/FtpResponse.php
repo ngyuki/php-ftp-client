@@ -14,7 +14,7 @@
  * @license   http://www.opensource.org/licenses/mit-license.php  MIT License
  * @link      https://github.com/ngyuki/FtpAlternative
  */
-class FtpAlternative_Response
+class FtpAlternative_FtpResponse
 {
 	/**
 	 * @var string レスポンスライン

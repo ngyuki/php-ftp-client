@@ -14,7 +14,7 @@
  * @license   http://www.opensource.org/licenses/mit-license.php  MIT License
  * @link      https://github.com/ngyuki/FtpAlternative
  */
-class FtpAlternative
+class FtpAlternative_FtpClient
 {
 	/**
 	 * @var FtpAlternative_TransportInterface コントロールコネクション
@@ -254,13 +254,13 @@ class FtpAlternative
 	/**
 	 * PASV コマンドの応答を解析してホスト名とポート番号を得る
 	 *
-	 * @param FtpAlternative_Response $resp
+	 * @param FtpAlternative_FtpResponse $resp
 	 *
 	 * @return array() ホスト名とポート番号 [ $host, $port ]
 	 *
 	 * @throws FtpAlternative_FtpException
 	 */
-	private function _parsePassiveResponse(FtpAlternative_Response $resp)
+	private function _parsePassiveResponse(FtpAlternative_FtpResponse $resp)
 	{
 		$mesg = $resp->mesg;
 		
@@ -666,14 +666,14 @@ class FtpAlternative
 	/**
 	 * 応答を受信する
 	 *
-	 * @return FtpAlternative_Response
+	 * @return FtpAlternative_FtpResponse
 	 *
 	 * @throws RuntimeException
 	 */
 	private function _recvResponse()
 	{
 		$line = $this->_control->recvline();
-		$resp = new FtpAlternative_Response($line);
+		$resp = new FtpAlternative_FtpResponse($line);
 		return $resp;
 	}
 }

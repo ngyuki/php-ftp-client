@@ -17,7 +17,7 @@
 class FtpAlternative_FtpException extends RuntimeException
 {
 	/**
-	 * @var FtpAlternative_Response レスポンスオブジェクト
+	 * @var FtpAlternative_FtpResponse レスポンスオブジェクト
 	 */
 	private $_response;
 	
@@ -25,9 +25,9 @@ class FtpAlternative_FtpException extends RuntimeException
 	 * コンストラクタ
 	 *
 	 * @param string $message
-	 * @param FtpAlternative_Response $response
+	 * @param FtpAlternative_FtpResponse $response
 	 */
-	public function __construct($message, FtpAlternative_Response $response)
+	public function __construct($message, FtpAlternative_FtpResponse $response)
 	{
 		parent::__construct($message, $response->code);
 		
@@ -37,7 +37,7 @@ class FtpAlternative_FtpException extends RuntimeException
 	/**
 	 * レスポンスオブジェクトを取得
 	 *
-	 * @return FtpAlternative_Response
+	 * @return FtpAlternative_FtpResponse
 	 */
 	public function getResponse()
 	{

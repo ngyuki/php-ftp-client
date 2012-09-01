@@ -5,7 +5,7 @@
 class FtpAlternativeTest extends PHPUnit_Framework_TestCase
 {
 	/**
-	 * @var FtpAlternative
+	 * @var FtpAlternative_FtpClient
 	 */
 	private $ftp;
 	
@@ -21,11 +21,11 @@ class FtpAlternativeTest extends PHPUnit_Framework_TestCase
 	
 	protected function setUp()
 	{
-		new stdClass() instanceof FtpAlternative_Response;
+		new stdClass() instanceof FtpAlternative_FtpResponse;
 		
 		$this->control = new FtpAlternative_TransportControlMock();
 		$this->transfer = new FtpAlternative_TransportTransferMock();
-		$this->ftp = new FtpAlternative($this->control, $this->transfer);
+		$this->ftp = new FtpAlternative_FtpClient($this->control, $this->transfer);
 	}
 	
 	/**
@@ -36,9 +36,9 @@ class FtpAlternativeTest extends PHPUnit_Framework_TestCase
 		$control = new FtpAlternative_TransportControlMock();
 		$transfer = new FtpAlternative_TransportTransferMock();
 		
-		$ftp = new FtpAlternative();
-		$ftp = new FtpAlternative($control);
-		$ftp = new FtpAlternative($control, $transfer);
+		$ftp = new FtpAlternative_FtpClient();
+		$ftp = new FtpAlternative_FtpClient($control);
+		$ftp = new FtpAlternative_FtpClient($control, $transfer);
 	}
 	
 	/**
@@ -48,7 +48,7 @@ class FtpAlternativeTest extends PHPUnit_Framework_TestCase
 	{
 		$control = new FtpAlternative_TransportControlMock();
 		$transfer = new FtpAlternative_TransportTransferMock();
-		$ftp = new FtpAlternative($control, $transfer);
+		$ftp = new FtpAlternative_FtpClient($control, $transfer);
 		
 		$control->setListen("192.2.0.123", 12345);
 		$control->addRecvline("220 connected");
@@ -70,7 +70,7 @@ class FtpAlternativeTest extends PHPUnit_Framework_TestCase
 		/// connect_error_invalid_respcode()
 		$control = new FtpAlternative_TransportControlMock();
 		$transfer = new FtpAlternative_TransportTransferMock();
-		$ftp = new FtpAlternative($control, $transfer);
+		$ftp = new FtpAlternative_FtpClient($control, $transfer);
 		
 		$control->setListen("192.2.0.123", 12345);
 		$control->addRecvline("954 xxx");
@@ -96,7 +96,7 @@ class FtpAlternativeTest extends PHPUnit_Framework_TestCase
 	{
 		$control = new FtpAlternative_TransportControlMock();
 		$transfer = new FtpAlternative_TransportTransferMock();
-		$ftp = new FtpAlternative($control, $transfer);
+		$ftp = new FtpAlternative_FtpClient($control, $transfer);
 		
 		$control->setListen("192.2.0.123", 12345);
 		
@@ -123,7 +123,7 @@ class FtpAlternativeTest extends PHPUnit_Framework_TestCase
 		$control = new FtpAlternative_TransportControlMock();
 		$transfer = new FtpAlternative_TransportTransferMock();
 		
-		$ftp = new FtpAlternative($control, $transfer);
+		$ftp = new FtpAlternative_FtpClient($control, $transfer);
 		
 		$control->setListen("192.2.0.123", 12345);
 		$control->addRecvline("220 connected");
@@ -227,7 +227,7 @@ class FtpAlternativeTest extends PHPUnit_Framework_TestCase
 	function quit()
 	{
 		$control = new FtpAlternative_TransportControlMock();
-		$ftp = new FtpAlternative($control);
+		$ftp = new FtpAlternative_FtpClient($control);
 		
 		$control->setListen("192.2.0.123", 12345);
 		$control->addRecvline("220 connected");
@@ -245,7 +245,7 @@ class FtpAlternativeTest extends PHPUnit_Framework_TestCase
 		// 応答コードが異なる
 		
 		$control = new FtpAlternative_TransportControlMock();
-		$ftp = new FtpAlternative($control);
+		$ftp = new FtpAlternative_FtpClient($control);
 		
 		$control->setListen("192.2.0.123", 12345);
 		$control->addRecvline("220 connected");
@@ -271,7 +271,7 @@ class FtpAlternativeTest extends PHPUnit_Framework_TestCase
 	function quit_error_noresp()
 	{
 		$control = new FtpAlternative_TransportControlMock();
-		$ftp = new FtpAlternative($control);
+		$ftp = new FtpAlternative_FtpClient($control);
 		
 		$control->setListen("192.2.0.123", 12345);
 		$control->addRecvline("220 connected");
@@ -297,7 +297,7 @@ class FtpAlternativeTest extends PHPUnit_Framework_TestCase
 	function quit_error_senderror()
 	{
 		$control = new FtpAlternative_TransportControlMock();
-		$ftp = new FtpAlternative($control);
+		$ftp = new FtpAlternative_FtpClient($control);
 		
 		$control->setListen("192.2.0.123", 12345);
 		$control->addRecvline("220 connected");
@@ -323,7 +323,7 @@ class FtpAlternativeTest extends PHPUnit_Framework_TestCase
 		// 未接続ならなにもしない
 		
 		$control = new FtpAlternative_TransportControlMock();
-		$ftp = new FtpAlternative($control);
+		$ftp = new FtpAlternative_FtpClient($control);
 		
 		$this->assertFalse($control->connected());
 		$ftp->quit();
