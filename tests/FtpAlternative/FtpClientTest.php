@@ -2,7 +2,7 @@
 /**
  * @author ng
  */
-class FtpAlternativeTest extends PHPUnit_Framework_TestCase
+class FtpAlternative_FtpClientTest extends PHPUnit_Framework_TestCase
 {
 	/**
 	 * @var FtpAlternative_FtpClient

@@ -41,12 +41,12 @@ class FtpAlternative_FtpClient
 	{
 		if ($control === null)
 		{
-			$control = new FtpAlternative_Transport();
+			$control = new FtpAlternative_TransportStream();
 		}
 		
 		if ($transfer === null)
 		{
-			$transfer = new FtpAlternative_Transport();
+			$transfer = new FtpAlternative_TransportStream();
 		}
 		
 		$this->_control = $control;

@@ -3,7 +3,7 @@
  * @author ng
  * @group posix
  */
-class FtpAlternative_TransportTest extends PHPUnit_Framework_TestCase
+class FtpAlternative_TransportStreamTest extends PHPUnit_Framework_TestCase
 {
 	public static function checkSkipped()
 	{
@@ -23,10 +23,15 @@ class FtpAlternative_TransportTest extends PHPUnit_Framework_TestCase
 		}
 	}
 	
-	public static function createDummyServer()
+	public function createDummyServer()
 	{
 		self::checkSkipped();
 		return new DummyServer();
+	}
+	
+	protected function createTransport()
+	{
+		return new FtpAlternative_TransportStream();
 	}
 	
 	/**
@@ -34,10 +39,10 @@ class FtpAlternative_TransportTest extends PHPUnit_Framework_TestCase
 	 */
 	public function test()
 	{
-		$server = self::createDummyServer();
+		$server = $this->createDummyServer();
 		$server->run();
 		
-		$transport = new FtpAlternative_Transport();
+		$transport = $this->createTransport();
 		$this->assertFalse($transport->connected());
 		
 		$transport->connect('127.0.0.1', 11111, 3);
@@ -67,7 +72,7 @@ class FtpAlternative_TransportTest extends PHPUnit_Framework_TestCase
 	 */
 	public function connect_error()
 	{
-		$transport = new FtpAlternative_Transport();
+		$transport = $this->createTransport();
 		
 		try
 		{
@@ -76,7 +81,8 @@ class FtpAlternative_TransportTest extends PHPUnit_Framework_TestCase
 		}
 		catch (RuntimeException $ex)
 		{
-			$this->assertContains("stream_socket_client()", $ex->getMessage());
+			$this->assertContains("connect", $ex->getMessage());
+			$this->assertContains("Connection refused", $ex->getMessage());
 		}
 	}
 	
@@ -87,12 +93,12 @@ class FtpAlternative_TransportTest extends PHPUnit_Framework_TestCase
 	{
 		$data = "123\r\naaaa\r\nbbb";
 		
-		$server = self::createDummyServer();
+		$server = $this->createDummyServer();
 		$server->addBuffer($data);
 		$server->addBuffer(null);
 		$server->run();
 		
-		$transport = new FtpAlternative_Transport();
+		$transport = $this->createTransport();
 		
 		$transport->connect('127.0.0.1', 11111, 3);
 		
@@ -107,13 +113,11 @@ class FtpAlternative_TransportTest extends PHPUnit_Framework_TestCase
 	 */
 	public function recvall_error()
 	{
-		$server = self::createDummyServer();
+		$server = $this->createDummyServer();
 		$server->run();
 		
-		$transport = new FtpAlternative_Transport();
+		$transport = $this->createTransport();
 		$transport->connect('127.0.0.1', 11111, 1);
-		
-		$server->term();
 		
 		try
 		{
@@ -131,13 +135,11 @@ class FtpAlternative_TransportTest extends PHPUnit_Framework_TestCase
 	 */
 	public function recvline_error()
 	{
-		$server = self::createDummyServer();
+		$server = $this->createDummyServer();
 		$server->run();
 		
-		$transport = new FtpAlternative_Transport();
+		$transport = $this->createTransport();
 		$transport->connect('127.0.0.1', 11111, 1);
-		
-		$server->term();
 		
 		try
 		{
@@ -155,10 +157,10 @@ class FtpAlternative_TransportTest extends PHPUnit_Framework_TestCase
 	 */
 	public function send_error()
 	{
-		$server = self::createDummyServer();
+		$server = $this->createDummyServer();
 		$server->run();
 		
-		$transport = new FtpAlternative_Transport();
+		$transport = $this->createTransport();
 		$transport->connect('127.0.0.1', 11111, 1);
 		
 		$server->term();

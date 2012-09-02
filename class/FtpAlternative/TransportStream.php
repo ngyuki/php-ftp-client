@@ -14,7 +14,7 @@
  * @license   http://www.opensource.org/licenses/mit-license.php  MIT License
  * @link      https://github.com/ngyuki/FtpAlternative
  */
-class FtpAlternative_Transport implements FtpAlternative_TransportInterface
+class FtpAlternative_TransportStream implements FtpAlternative_TransportInterface
 {
 	/**
 	 * @var resource ソケットストリームリソース
@@ -123,6 +123,36 @@ class FtpAlternative_Transport implements FtpAlternative_TransportInterface
 		
 		while (feof($this->_stream) == false)
 		{
+			// stream_get_contents → サーバが応答無い場合にタイムアウトせずに待ち続ける
+			// fgets → たまに EOF に達した時に false が返る？
+			
+			$recv = fgets($this->_stream, 1024);
+			
+			if ($recv === false)
+			{
+				if (feof($this->_stream))
+				{
+					break;
+				}
+				
+				throw new RuntimeException("fgets(): unknown error");
+			}
+
+			$data[] = $recv;
+		}
+		
+        return implode("", $data);
+	}
+	/*public function recvall()
+	{
+		ASSERT('is_resource($this->_stream)');
+		
+		$handler = new FtpAlternative_ErrorHandler();
+		
+		$data = array();
+		
+		while (feof($this->_stream) == false)
+		{
 			$recv = fgets($this->_stream, 1024);
 				
 			if ($recv === false)
@@ -134,7 +164,7 @@ class FtpAlternative_Transport implements FtpAlternative_TransportInterface
 		}
 		
         return implode("", $data);
-	}
+	}*/
 	
 	/**
 	 * データを一行受信する
