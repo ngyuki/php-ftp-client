@@ -588,69 +588,6 @@ class FtpAlternative_FtpClient
 	}
 	
 	/**
-	 * 再帰的にディレクトリを作成する
-	 *
-	 * 成功した場合はカレントディレクトリが作成したディレクトリになります。
-	 * 失敗した場合はカレントディレクトリの位置は不定になります。
-	 *
-	 * @param string $dir
-	 *
-	 * @throws FtpAlternative_FtpException
-	 * @throws RuntimeException
-	 *
-	 * @deprecated
-	 * @codeCoverageIgnore
-	 */
-	public function mkdirRecursive($dir)
-	{
-		$list = explode("/", $dir);
-		
-		$cnt = count($list);
-		
-		$ok = null;
-		
-		for ($i=$cnt; $i>0; $i--)
-		{
-			$tmp = array_slice($list, 0, $i);
-			$tmp = implode("/", $tmp);
-			
-			if (strlen($tmp) == 0)
-			{
-				$tmp = "/";
-			}
-			
-			try
-			{
-				$this->chdir($tmp);
-				$ok = $i;
-				break;
-			}
-			catch (FtpAlternative_FtpException $ex)
-			{}
-		}
-		
-		if ($ok === null)
-		{
-			if ($ex)
-			{
-				throw $ex;
-			}
-			else
-			{
-				throw new LogicException("mkdir_r(): unknown error");
-			}
-		}
-		
-		for ($i=$ok; $i<$cnt; $i++)
-		{
-			$tmp = $list[$i];
-			
-			$this->mkdir($tmp);
-			$this->chdir($tmp);
-		}
-	}
-	
-	/**
 	 * コマンドを送信して応答を受信する
 	 *
 	 * @param string $cmd
