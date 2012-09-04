@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<phpunit
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://raw.github.com/sebastianbergmann/phpunit/master/phpunit.xsd"
 	bootstrap="bootstrap.php"
 	colors="true"
 >
-
 	<filter>
-	  <whitelist addUncoveredFilesFromWhitelist="true">
-	    <directory suffix=".php">../class/</directory>
-	  </whitelist>
+		<whitelist>
+			<directory suffix=".php">../class/</directory>
+		</whitelist>
 	</filter>
-
 </phpunit>
