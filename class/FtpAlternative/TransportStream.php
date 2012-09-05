@@ -46,11 +46,11 @@ class FtpAlternative_TransportStream implements FtpAlternative_TransportInterfac
 		
 		$handler = new FtpAlternative_ErrorHandler();
 		
-		$url = "tcp://$host:$port";
-		
 		$errno = 0;
 		$errstr = "";
 		
+		// stream_socket_client → RST でもタイムアウトまで待ってしまう・・・
+		$url = "tcp://$host:$port";
 		$stream = stream_socket_client($url, $errno, $errstr, $timeout);
 		
 		if (is_resource($stream) == false)

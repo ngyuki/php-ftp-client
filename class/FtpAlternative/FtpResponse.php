@@ -40,6 +40,8 @@ class FtpAlternative_FtpResponse
 	{
 		ASSERT(' is_string($line) ');
 		
+		$line = trim($line);
+		
 		$code = null;
 		$mesg = "";
 		

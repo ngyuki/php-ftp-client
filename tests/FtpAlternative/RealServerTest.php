@@ -2,6 +2,7 @@
 /**
  * @author ng
  * @group realserver
+ * @group server
  */
 class FtpAlternative_RealServerTest extends PHPUnit_Framework_TestCase implements FtpAlternative_RealServerTest_Config
 {
@@ -113,6 +114,7 @@ class FtpAlternative_RealServerTest extends PHPUnit_Framework_TestCase implement
 			catch (FtpAlternative_FtpException $ex)
 			{
 				$this->assertEquals(550, $ex->getCode());
+				$this->assertStringMatchesFormat('chdir(): CWD command returned "%s"', $ex->getMessage());
 			}
 			
 			$ftp->mkdir("aa");

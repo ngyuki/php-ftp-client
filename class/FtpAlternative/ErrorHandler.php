@@ -52,10 +52,11 @@ class FtpAlternative_ErrorHandler
 	/**
 	 * エラーハンドラ
 	 *
-	 * @return callable
+	 * @return Closure
 	 */
 	private static function _handler()
 	{
+		// 5.4 で $this を束縛しないように
 		return function($errno, $errstr, $errfile, $errline) {
 			throw new RuntimeException($errstr, $errno);
 			//throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
