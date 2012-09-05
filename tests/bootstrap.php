@@ -4,12 +4,17 @@ require_once dirname(__DIR__) . '/class/FtpAlternative/autoload.php';
 spl_autoload_register(function($name) {
 	
 	$name = str_replace("_", DIRECTORY_SEPARATOR, $name) . ".php";
-	$dir = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'tests';
-	$fn = $dir . DIRECTORY_SEPARATOR . $name;
+	$dirs = array(__DIR__, __DIR__  . '/class');
 	
-	if (is_readable($fn))
+	foreach ($dirs as $dir)
 	{
-		require $fn;
+		$fn = $dir . DIRECTORY_SEPARATOR . $name;
+		
+		if (is_readable($fn))
+		{
+			require $fn;
+			return;
+		}
 	}
 });
 

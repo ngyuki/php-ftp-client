@@ -5,30 +5,6 @@
  */
 class FtpAlternative_TransportStreamTest extends PHPUnit_Framework_TestCase
 {
-	public static function checkSkipped()
-	{
-		if (!function_exists('posix_kill'))
-		{
-			self::markTestSkipped("Require Extension posix");
-		}
-		
-		if (!function_exists('pcntl_fork'))
-		{
-			self::markTestSkipped("Require Extension pcntl");
-		}
-		
-		if (!function_exists('socket_create'))
-		{
-			self::markTestSkipped("Require Extension sockets");
-		}
-	}
-	
-	public function createDummyServer()
-	{
-		self::checkSkipped();
-		return new DummyServer();
-	}
-	
 	protected function createTransport()
 	{
 		return new FtpAlternative_TransportStream();
@@ -37,10 +13,30 @@ class FtpAlternative_TransportStreamTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @test
 	 */
-	public function test()
+	public function test2()
 	{
-		$server = $this->createDummyServer();
-		$server->run();
+		$data1 = "123456789\r\n";
+		$data2 = str_repeat("x", 1000*1000) . "\r\n";
+		
+		$server = new DummyServer();
+		$server->run(11111, function ($stream) use ($data1, $data2) {
+			
+			$data = fgets($stream);
+			if ($data !== $data1)
+			{
+				return;
+			}
+			
+			fputs($stream, $data);
+			
+			$data = fgets($stream);
+			if ($data !== $data2)
+			{
+				return;
+			}
+			
+			fputs($stream, $data2);
+		});
 		
 		$transport = $this->createTransport();
 		$this->assertFalse($transport->connected());
@@ -48,20 +44,17 @@ class FtpAlternative_TransportStreamTest extends PHPUnit_Framework_TestCase
 		$transport->connect('127.0.0.1', 11111, 3);
 		$this->assertTrue($transport->connected());
 		
-		$data = "123456789\r\n";
-		
-		$transport->send($data);
+		$transport->send($data1);
 		
 		$line = $transport->recvline();
-		$this->assertSame($data, $line);
+		$this->assertSame($data1, $line);
 		
 		//
-		$data = str_repeat("x", 1000*1000) . "\r\n";
 		
-		$transport->send($data);
+		$transport->send($data2);
 		
 		$line = $transport->recvline();
-		$this->assertSame($data, $line);
+		$this->assertSame($data2, $line);
 		
 		$transport->close();
 		$this->assertFalse($transport->connected());
@@ -70,19 +63,46 @@ class FtpAlternative_TransportStreamTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @test
 	 */
-	public function connect_error()
+	public function connect_refused()
 	{
 		$transport = $this->createTransport();
 		
+		$time = microtime(true);
+		
 		try
 		{
-			$transport->connect('127.0.0.1', 11111, 1);
+			$transport->connect('127.0.0.1', 1, 3);
 			$this->fail();
 		}
 		catch (RuntimeException $ex)
 		{
+			$this->assertLessThan(0.1, microtime(true) - $time);
 			$this->assertContains("connect", $ex->getMessage());
 			$this->assertContains("Connection refused", $ex->getMessage());
+		}
+	}
+	
+	/**
+	 * @test
+	 * @group longtime
+	 */
+	public function connect_timeout()
+	{
+		$transport = $this->createTransport();
+		
+		$time = microtime(true);
+		
+		try
+		{
+			$transport->connect('192.2.0.123', 11111, 2);
+			$this->fail();
+		}
+		catch (RuntimeException $ex)
+		{
+			$this->assertLessThan(2.1, microtime(true) - $time);
+			$this->assertGreaterThan(1.9, microtime(true) - $time);
+			$this->assertContains("connect", $ex->getMessage());
+			$this->assertContains("Connection timed out", $ex->getMessage());
 		}
 	}
 	
@@ -93,10 +113,10 @@ class FtpAlternative_TransportStreamTest extends PHPUnit_Framework_TestCase
 	{
 		$data = "123\r\naaaa\r\nbbb";
 		
-		$server = $this->createDummyServer();
-		$server->addBuffer($data);
-		$server->addBuffer(null);
-		$server->run();
+		$server = new DummyServer();
+		$server->run(11111, function ($stream) use ($data) {
+			fputs($stream, $data);
+		});
 		
 		$transport = $this->createTransport();
 		
@@ -110,14 +130,19 @@ class FtpAlternative_TransportStreamTest extends PHPUnit_Framework_TestCase
 	
 	/**
 	 * @test
+	 * @group longtime
 	 */
-	public function recvall_error()
+	public function recvall_timeout()
 	{
-		$server = $this->createDummyServer();
-		$server->run();
+		$server = new DummyServer();
+		$server->run(11111, function ($stream) {
+			sleep(10);
+		});
 		
 		$transport = $this->createTransport();
-		$transport->connect('127.0.0.1', 11111, 1);
+		$transport->connect('127.0.0.1', 11111, 2);
+		
+		$time = microtime(true);
 		
 		try
 		{
@@ -126,20 +151,27 @@ class FtpAlternative_TransportStreamTest extends PHPUnit_Framework_TestCase
 		}
 		catch (RuntimeException $ex)
 		{
+			$this->assertLessThan(2.1, microtime(true) - $time);
+			$this->assertGreaterThan(1.9, microtime(true) - $time);
 			$this->assertContains("fgets()", $ex->getMessage());
 		}
 	}
 	
 	/**
 	 * @test
+	 * @group longtime
 	 */
-	public function recvline_error()
+	public function recvline_timeout()
 	{
-		$server = $this->createDummyServer();
-		$server->run();
+		$server = new DummyServer();
+		$server->run(11111, function ($stream) {
+			sleep(10);
+		});
 		
 		$transport = $this->createTransport();
-		$transport->connect('127.0.0.1', 11111, 1);
+		$transport->connect('127.0.0.1', 11111, 2);
+		
+		$time = microtime(true);
 		
 		try
 		{
@@ -148,6 +180,8 @@ class FtpAlternative_TransportStreamTest extends PHPUnit_Framework_TestCase
 		}
 		catch (RuntimeException $ex)
 		{
+			$this->assertLessThan(2.1, microtime(true) - $time);
+			$this->assertGreaterThan(1.9, microtime(true) - $time);
 			$this->assertContains("fgets()", $ex->getMessage());
 		}
 	}
@@ -157,8 +191,10 @@ class FtpAlternative_TransportStreamTest extends PHPUnit_Framework_TestCase
 	 */
 	public function send_error()
 	{
-		$server = $this->createDummyServer();
-		$server->run();
+		$server = new DummyServer();
+		$server->run(11111, function ($stream) {
+			sleep(10);
+		});
 		
 		$transport = $this->createTransport();
 		$transport->connect('127.0.0.1', 11111, 1);
