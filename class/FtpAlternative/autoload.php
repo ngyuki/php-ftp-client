@@ -9,10 +9,17 @@
 
 spl_autoload_register(function($name) {
 	
-	$fn = dirname(__DIR__) . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $name) . '.php';
+	$ns = 'FtpAlternative_';
+	$len = strlen($ns);
 	
-	if (is_readable($fn))
+	if (strncmp($name, $ns, $len) === 0)
 	{
-		require $fn;
+		$name = substr($name, $len);
+		$fn = __DIR__ . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $name) . '.php';
+		
+		if (is_readable($fn))
+		{
+			require $fn;
+		}
 	}
 });
