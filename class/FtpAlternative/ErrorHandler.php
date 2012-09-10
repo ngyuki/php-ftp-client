@@ -1,16 +1,16 @@
 <?php
 /**
  * @package   FtpAlternative
- * @copyright 2012 tsyk goto (@ngyuki)
- * @author    tsyk goto <ngyuki.ts@gmail.com>
+ * @copyright 2012 tsyk goto
+ * @author    tsyk goto
  * @license   http://www.opensource.org/licenses/mit-license.php  MIT License
  * @link      https://github.com/ngyuki/FtpAlternative
  */
 
 /**
  * @package   FtpAlternative
- * @copyright 2012 tsyk goto (@ngyuki)
- * @author    tsyk goto <ngyuki.ts@gmail.com>
+ * @copyright 2012 tsyk goto
+ * @author    tsyk goto
  * @license   http://www.opensource.org/licenses/mit-license.php  MIT License
  * @link      https://github.com/ngyuki/FtpAlternative
  */
