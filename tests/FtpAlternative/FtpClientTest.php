@@ -615,8 +615,8 @@ class FtpAlternative_FtpClientTest extends PHPUnit_Framework_TestCase
 		$transfer = $this->transfer;
 		
 		$control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
-		$control->addPattern("/^TYPE I\s*$/", "200");
-		$control->addPattern("/^STOR hoge.txt\s*$/", "150");
+		$control->addPattern("/^TYPE I\s*$/", "200 Type set to I");
+		$control->addPattern("/^STOR hoge.txt\s*$/", "150 Content Scanning Enabled - please wait.");
 		
 		$self = $this;
 		$obj = new stdClass();
@@ -637,6 +637,53 @@ class FtpAlternative_FtpClientTest extends PHPUnit_Framework_TestCase
 		$transfer->onClose(function() use($self, $obj, $control, $transfer) {
 			$self->assertTrue($transfer->connected());
 			$control->addRecvline("226");
+			$obj->close = ++$obj->no;
+		});
+		
+		$ftp->put("hoge.txt", "0123456789abcdef");
+		
+		$this->assertFalse($transfer->connected());
+		$this->assertSame($obj->connect, 1);
+		$this->assertSame($obj->send, 2);
+		$this->assertSame($obj->close, 3);
+	}
+	
+	/**
+	 * @test
+	 */
+	function put_multiline()
+	{
+		$this->prepareConnection();
+		$ftp = $this->ftp;
+		$control = $this->control;
+		$transfer = $this->transfer;
+		
+		$control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+		$control->addPattern("/^TYPE I\s*$/", "200 Type set to I");
+		$control->addPattern("/^STOR hoge.txt\s*$/", "150 Content Scanning Enabled - please wait.");
+		
+		$self = $this;
+		$obj = new stdClass();
+		$obj->no = 0;
+		
+		$transfer->onConnect(function($host, $port, $timeout) use ($self, $obj) {
+			$self->assertEquals($host, "192.2.0.124");
+			$self->assertEquals($port, 12346);
+			$obj->connect = ++$obj->no;
+		});
+		
+		$transfer->onSend(function($data) use($self, $obj, $transfer) {
+			$self->assertTrue($transfer->connected());
+			$self->assertSame("0123456789abcdef", $data);
+			$obj->send = ++$obj->no;
+		});
+		
+		$transfer->onClose(function() use($self, $obj, $control, $transfer) {
+			$self->assertTrue($transfer->connected());
+			$control->addRecvline("226- Scanning hoge.txt - (16 bytes).");
+			$control->addRecvline("226- Uploading hoge.txt (0 of 16 bytes).");
+			$control->addRecvline("226 Content allowed  : transfer complete.");
+			
 			$obj->close = ++$obj->no;
 		});
 		
