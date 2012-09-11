@@ -34,33 +34,15 @@ class FtpAlternative_FtpResponse
 	/**
 	 * コンストラクタ
 	 *
+	 * @param string $code
+	 * @param string $mesg
 	 * @param string $line
 	 */
-	public function __construct($line)
+	public function __construct($code, $mesg, $line)
 	{
+		ASSERT(' is_null($code) || is_int($code) ');
+		ASSERT(' is_string($mesg) ');
 		ASSERT(' is_string($line) ');
-		
-		$line = trim($line);
-		
-		$code = null;
-		$mesg = "";
-		
-		$arr = preg_split("/\s+/", $line, 2);
-		
-		if (isset($arr[0]))
-		{
-			$str = $arr[0];
-			
-			if ((strlen($str) <= 3) && ctype_digit($str))
-			{
-				$code = (int)$str;
-			}
-		}
-		
-		if (isset($arr[1]))
-		{
-			$mesg = $arr[1];
-		}
 		
 		$this->_line = $line;
 		$this->_code = $code;

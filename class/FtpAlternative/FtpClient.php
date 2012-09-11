@@ -609,8 +609,61 @@ class FtpAlternative_FtpClient
 	 */
 	private function _recvResponse()
 	{
-		$line = $this->_control->recvline();
-		$resp = new FtpAlternative_FtpResponse($line);
-		return $resp;
+		for (;;)
+		{
+			$line = $this->_control->recvline();
+			
+			$line = rtrim($line);
+			
+			list ($code, $mesg) = $this->_parseResponse($line);
+			
+			if ($code !== null)
+			{
+				$resp = new FtpAlternative_FtpResponse($code, $mesg, $line);
+				return $resp;
+			}
+		}
+	}
+	
+	/**
+	 * レスポンスを解析する
+	 *
+	 * 戻り値は [ $code, $mesg ] の形式
+	 *
+	 *   $code  レスポンスコード、解析出来ない場合は null
+	 *   $mesg  メッセージ、解析出来ない場合は null
+	 *
+	 * @param string $line
+	 * @return array
+	 */
+	private function _parseResponse($line)
+	{
+		ASSERT(' is_string($line) ');
+		
+		$code = null;
+		$mesg = "";
+		
+		$arr = explode(" ", $line, 2);
+		
+		if (count($arr) < 2)
+		{
+			list ($code) = $arr;
+		}
+		else
+		{
+			list ($code, $mesg) = $arr;
+		}
+		
+		if (strlen($code) !== 3)
+		{
+			return array(null, null);
+		}
+		
+		if (ctype_digit($code) === false)
+		{
+			return array(null, null);
+		}
+		
+		return array((int)$code, (string)$mesg);
 	}
 }

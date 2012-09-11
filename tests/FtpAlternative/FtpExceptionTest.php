@@ -9,8 +9,7 @@ class FtpAlternative_FtpExceptionTest extends PHPUnit_Framework_TestCase
 	 */
 	public function test()
 	{
-		$line = "123 abc";
-		$resp = new FtpAlternative_FtpResponse($line);
+		$resp = new FtpAlternative_FtpResponse(123, "abc", "123 abc");
 		$obj = new FtpAlternative_FtpException("xyz", $resp);
 		
 		$this->assertSame(123, $obj->getCode());
