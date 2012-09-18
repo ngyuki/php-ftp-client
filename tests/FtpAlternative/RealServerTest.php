@@ -182,6 +182,7 @@ class FtpAlternative_RealServerTest extends PHPUnit_Framework_TestCase implement
 		
 		try
 		{
+			// ポートが閉じていて拒否される
 			$ftp->connect(self::REFUSE_HOST, self::REFUSE_PORT, 1);
 			$this->fail();
 		}
@@ -193,13 +194,14 @@ class FtpAlternative_RealServerTest extends PHPUnit_Framework_TestCase implement
 		
 		try
 		{
+			// ポートは開いているが応答が無い
 			$ftp->connect(self::HTTP_HOST, self::HTTP_PORT, 1);
 			$this->fail();
 		}
 		catch (RuntimeException $ex)
 		{
 			$this->assertSame('RuntimeException', get_class($ex));
-			$this->assertContains("fgets(): unknown error", $ex->getMessage());
+			$this->assertContains("fgets(): timeout", $ex->getMessage());
 		}
 	}
 	

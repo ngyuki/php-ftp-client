@@ -22,6 +22,11 @@ class FtpAlternative_TransportStream implements FtpAlternative_TransportInterfac
 	private $_stream;
 	
 	/**
+	 * @var boolean EOF
+	 */
+	private $_eof = false;
+	
+	/**
 	 * デストラクタ
 	 */
 	public function __destruct()
@@ -82,6 +87,7 @@ class FtpAlternative_TransportStream implements FtpAlternative_TransportInterfac
 		}
 		
 		$this->_stream = $stream;
+		$this->_eof = false;
 	}
 	
 	/**
@@ -103,7 +109,52 @@ class FtpAlternative_TransportStream implements FtpAlternative_TransportInterfac
 		{
 			fclose($this->_stream);
 			$this->_stream = null;
+			$this->_eof = false;
 		}
+	}
+	
+	/**
+	 * fgets wrapper
+	 *
+	 * @return string|null 受信データ または null (EOF)
+	 */
+	private function _fgets()
+	{
+		if ($this->_eof)
+		{
+			throw new RuntimeException("fgets(): end of stream");
+		}
+		
+		if (feof($this->_stream))
+		{
+			$this->_eof = true;
+			return null;
+		}
+		
+		$recv = fgets($this->_stream, 1024);
+		
+		if ($recv === false)
+		{
+			$meta = stream_get_meta_data($this->_stream);
+			
+			if (is_array($meta))
+			{
+				if (isset($meta['timed_out']) && $meta['timed_out'])
+				{
+					throw new RuntimeException("fgets(): timeout");
+				}
+				
+				if (isset($meta['eof']) && $meta['eof'])
+				{
+					$this->_eof = true;
+					return null;
+				}
+			}
+			
+			throw new RuntimeException("fgets(): unknown error");
+		}
+		
+		return $recv;
 	}
 	
 	/**
@@ -121,50 +172,24 @@ class FtpAlternative_TransportStream implements FtpAlternative_TransportInterfac
 		
 		$data = array();
 		
-		while (feof($this->_stream) == false)
+		for(;;)
 		{
 			// stream_get_contents → サーバが応答無い場合にタイムアウトせずに待ち続ける
 			// fgets → たまに EOF に達した時に false が返る？
+			//       → タイムアウトでも false が返るので eof と timeout を判断して処理する
 			
-			$recv = fgets($this->_stream, 1024);
+			$recv = $this->_fgets();
 			
-			if ($recv === false)
+			if ($recv === null)
 			{
-				if (feof($this->_stream))
-				{
-					break;
-				}
-				
-				throw new RuntimeException("fgets(): unknown error");
+				break;
 			}
-
+			
 			$data[] = $recv;
 		}
 		
         return implode("", $data);
 	}
-	/*public function recvall()
-	{
-		ASSERT('is_resource($this->_stream)');
-		
-		$handler = new FtpAlternative_ErrorHandler();
-		
-		$data = array();
-		
-		while (feof($this->_stream) == false)
-		{
-			$recv = fgets($this->_stream, 1024);
-				
-			if ($recv === false)
-			{
-				throw new RuntimeException("fgets(): unknown error");
-			}
-
-			$data[] = $recv;
-		}
-		
-        return implode("", $data);
-	}*/
 	
 	/**
 	 * データを一行受信する
@@ -181,13 +206,13 @@ class FtpAlternative_TransportStream implements FtpAlternative_TransportInterfac
 		
 		$data = array();
 		
-		while (feof($this->_stream) == false)
+		for(;;)
 		{
-			$recv = fgets($this->_stream, 1024);
+			$recv = $this->_fgets();
 			
-			if ($recv === false)
+			if ($recv === null)
 			{
-				throw new RuntimeException("fgets(): unknown error");
+				break;
 			}
 			
 			$data[] = $recv;

@@ -13,7 +13,7 @@ class FtpAlternative_TransportStreamTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @test
 	 */
-	public function test2()
+	public function test()
 	{
 		$data1 = "123456789\r\n";
 		$data2 = str_repeat("x", 1000*1000) . "\r\n";
@@ -65,6 +65,8 @@ class FtpAlternative_TransportStreamTest extends PHPUnit_Framework_TestCase
 	 */
 	public function connect_refused()
 	{
+		// 接続が拒否された場合（開いていないポートへ接続）
+		
 		$transport = $this->createTransport();
 		
 		$time = microtime(true);
@@ -88,6 +90,8 @@ class FtpAlternative_TransportStreamTest extends PHPUnit_Framework_TestCase
 	 */
 	public function connect_timeout()
 	{
+		// 接続がタイムアウトした場合（存在しないIPアドレスへ接続）
+		
 		$transport = $this->createTransport();
 		
 		$time = microtime(true);
@@ -134,6 +138,8 @@ class FtpAlternative_TransportStreamTest extends PHPUnit_Framework_TestCase
 	 */
 	public function recvall_timeout()
 	{
+		// サーバが応答を返さずにタイムアウトした場合
+		
 		$server = new DummyServer();
 		$server->run(11111, function ($stream) {
 			sleep(10);
@@ -153,8 +159,68 @@ class FtpAlternative_TransportStreamTest extends PHPUnit_Framework_TestCase
 		{
 			$this->assertLessThan(2.1, microtime(true) - $time);
 			$this->assertGreaterThan(1.9, microtime(true) - $time);
-			$this->assertContains("fgets()", $ex->getMessage());
+			$this->assertContains("fgets(): timeout", $ex->getMessage());
 		}
+	}
+	
+	/**
+	 * @test
+	 * @group longtime
+	 */
+	public function recvall_shutdown()
+	{
+		// サーバがソケットをシャットダウンした場合
+		
+		$server = new DummyServer();
+		$server->run(11111, function ($stream) {
+			stream_socket_shutdown($stream, STREAM_SHUT_RDWR);
+		});
+		
+		$transport = $this->createTransport();
+		$transport->connect('127.0.0.1', 11111, 2);
+		
+		$time = microtime(true);
+		
+		$recv = $transport->recvall();
+		$this->assertSame("", $recv);
+		
+		$time = microtime(true);
+		
+		try
+		{
+			$transport->recvall();
+			$this->fail();
+		}
+		catch (RuntimeException $ex)
+		{
+			$this->assertLessThan(0.1, microtime(true) - $time);
+			$this->assertContains("fgets(): end of stream", $ex->getMessage());
+		}
+	}
+	
+	/**
+	 * @test
+	 * @group longtime
+	 * @group one
+	 */
+	public function recvall_bigdata()
+	{
+		// 1 回の fgets では受信しきれない大きいデータ
+		
+		$data = str_repeat("x", 1024*100);
+		
+		$server = new DummyServer();
+		$server->run(11111, function ($stream) use ($data) {
+			fputs($stream, $data);
+		});
+		
+		$transport = $this->createTransport();
+		$transport->connect('127.0.0.1', 11111, 2);
+		
+		$time = microtime(true);
+		
+		$recv = $transport->recvall();
+		$this->assertSame($data, $recv);
 	}
 	
 	/**
@@ -163,6 +229,8 @@ class FtpAlternative_TransportStreamTest extends PHPUnit_Framework_TestCase
 	 */
 	public function recvline_timeout()
 	{
+		// サーバが応答を返さずにタイムアウトした場合
+		
 		$server = new DummyServer();
 		$server->run(11111, function ($stream) {
 			sleep(10);
@@ -182,7 +250,76 @@ class FtpAlternative_TransportStreamTest extends PHPUnit_Framework_TestCase
 		{
 			$this->assertLessThan(2.1, microtime(true) - $time);
 			$this->assertGreaterThan(1.9, microtime(true) - $time);
-			$this->assertContains("fgets()", $ex->getMessage());
+			$this->assertContains("fgets(): timeout", $ex->getMessage());
+		}
+	}
+	
+	/**
+	 * @test
+	 * @group longtime
+	 */
+	public function recvline_shutdown()
+	{
+		// サーバがソケットをシャットダウンした場合
+		
+		$server = new DummyServer();
+		$server->run(11111, function ($stream) {
+			stream_socket_shutdown($stream, STREAM_SHUT_RDWR);
+		});
+		
+		$transport = $this->createTransport();
+		$transport->connect('127.0.0.1', 11111, 2);
+		
+		$recv = $transport->recvline();
+		$this->assertSame("", $recv);
+		
+		$time = microtime(true);
+		
+		try
+		{
+			$transport->recvline();
+			$this->fail();
+		}
+		catch (RuntimeException $ex)
+		{
+			$this->assertLessThan(0.1, microtime(true) - $time);
+			$this->assertContains("fgets(): end of stream", $ex->getMessage());
+		}
+	}
+	
+	/**
+	 * @test
+	 * @group longtime
+	 */
+	public function recvline_bigdata()
+	{
+		// 1 回の fgets では受信しきれない大きいデータ
+		
+		$data = str_repeat("x", 1024*100);
+		
+		$server = new DummyServer();
+		$server->run(11111, function ($stream) use ($data) {
+			fputs($stream, $data);
+		});
+		
+		$transport = $this->createTransport();
+		$transport->connect('127.0.0.1', 11111, 2);
+		
+		$recv = $transport->recvline();
+		$this->assertSame($data, $recv);
+		
+		$time = microtime(true);
+		
+		try
+		{
+			$transport->recvline();
+		}
+		catch (RuntimeException $ex)
+		{
+			// EOF に達しているため例外になるが呼び出し元にEOFを判断するすべがない・・・
+			//   → 呼び出し元は EOF では無いはずだと思っているわけなので例外のままで構わないとする
+			$this->assertLessThan(0.1, microtime(true) - $time);
+			$this->assertContains("fgets(): end of stream", $ex->getMessage());
 		}
 	}
 	

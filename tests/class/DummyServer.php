@@ -89,11 +89,19 @@ class DummyServer
 		try
 		{
 			$action($client);
-			fclose($client);
+			
+			if (is_resource($client))
+			{
+				fclose($client);
+			}
 		}
 		catch (Exception $ex)
 		{
-			fclose($client);
+			if (is_resource($client))
+			{
+				fclose($client);
+			}
+			
 			throw $ex;
 		}
 	}
