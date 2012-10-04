@@ -4,7 +4,7 @@
  * @group realserver
  * @group server
  */
-class FtpAlternative_RealServerTest extends PHPUnit_Framework_TestCase implements FtpAlternative_RealServerTest_Config
+class FtpAlternative_RealServerTest extends PHPUnit_Framework_TestCase
 {
 	function init_empty(FtpAlternative_FtpClient $ftp)
 	{
@@ -52,12 +52,17 @@ class FtpAlternative_RealServerTest extends PHPUnit_Framework_TestCase implement
 	 */
 	function success()
 	{
+		if (defined('FTP_HOST') == false || strlen(FTP_HOST) == 0)
+		{
+			$this->markTestSkipped("require const FTP_HOST");
+		}
+		
 		$ftp = new FtpAlternative_FtpClient();
 		
 		try
 		{
-			$ftp->connect(self::HOST, self::PORT, 5);
-			$ftp->login(self::USER, self::PASS);
+			$ftp->connect(FTP_HOST, (int)FTP_PORT, 5);
+			$ftp->login(FTP_USER, FTP_PASS);
 			
 			$this->init_empty($ftp);
 			
@@ -176,14 +181,19 @@ class FtpAlternative_RealServerTest extends PHPUnit_Framework_TestCase implement
 	/**
 	 * @test
 	 */
-	function connect_errors()
+	function connect_refuse()
 	{
+		if (defined('REFUSE_HOST') == false || strlen(REFUSE_HOST) == 0)
+		{
+			$this->markTestSkipped("require const REFUSE_HOST");
+		}
+		
 		$ftp = new FtpAlternative_FtpClient();
 		
 		try
 		{
 			// ポートが閉じていて拒否される
-			$ftp->connect(self::REFUSE_HOST, self::REFUSE_PORT, 1);
+			$ftp->connect(REFUSE_HOST, (int)REFUSE_PORT, 1);
 			$this->fail();
 		}
 		catch (RuntimeException $ex)
@@ -191,11 +201,24 @@ class FtpAlternative_RealServerTest extends PHPUnit_Framework_TestCase implement
 			$this->assertSame('RuntimeException', get_class($ex));
 			$this->assertContains("Connection refused", $ex->getMessage());
 		}
+	}
+	
+	/**
+	 * @test
+	 */
+	function connect_nothing()
+	{
+		if (defined('HTTP_HOST') == false || strlen(HTTP_HOST) == 0)
+		{
+			$this->markTestSkipped("require const HTTP_HOST");
+		}
+		
+		$ftp = new FtpAlternative_FtpClient();
 		
 		try
 		{
 			// ポートは開いているが応答が無い
-			$ftp->connect(self::HTTP_HOST, self::HTTP_PORT, 1);
+			$ftp->connect(HTTP_HOST, (int)HTTP_PORT, 1);
 			$this->fail();
 		}
 		catch (RuntimeException $ex)
@@ -210,13 +233,18 @@ class FtpAlternative_RealServerTest extends PHPUnit_Framework_TestCase implement
 	 */
 	function login_errors()
 	{
+		if (defined('FTP_HOST') == false || strlen(FTP_HOST) == 0)
+		{
+			$this->markTestSkipped("require const FTP_HOST");
+		}
+		
 		$ftp = new FtpAlternative_FtpClient();
 		
-		$ftp->connect(self::HOST, self::PORT, 5);
+		$ftp->connect(FTP_HOST, (int)FTP_PORT, 5);
 		
 		try
 		{
-			$ftp->login(self::INVALID_USER, self::INVALID_PASS);
+			$ftp->login(INVALID_USER, INVALID_PASS);
 			$this->fail();
 		}
 		catch (FtpAlternative_FtpException $ex)

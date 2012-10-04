@@ -1,8 +1,9 @@
 @echo off
 
-pushd %~dp0
+pushd %~dp0\tests
 
-call phpunit -c tests/phpunit-win.xml --coverage-html report/ tests/
-start report/index.html
+call phpunit -c phpunit.win.xml --coverage-html ../report/
 
 popd
+
+start report\index.html

@@ -1,7 +1,11 @@
 #!/bin/bash
 
+pushd tests
+
 if [ "$#" -eq 0 ]; then
-	exec phpunit -c tests/phpunit.xml --coverage-html report/ tests/
+	exec phpunit --coverage-html report/
 else
-	exec phpunit -c tests/phpunit.xml --coverage-html report/ "$@"
+	exec phpunit --coverage-html report/ "$@"
 fi
+
+popd

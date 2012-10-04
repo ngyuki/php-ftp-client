@@ -17,12 +17,3 @@ spl_autoload_register(function($name) {
 		}
 	}
 });
-
-if (is_readable(__DIR__ . DIRECTORY_SEPARATOR . 'config.php'))
-{
-	require __DIR__ . DIRECTORY_SEPARATOR . 'config.php';
-}
-else
-{
-	require __DIR__ . DIRECTORY_SEPARATOR . 'config.dist.php';
-}
