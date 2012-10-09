@@ -298,38 +298,7 @@ class FtpAlternative_FtpClient
 	 */
 	public function get($fn)
 	{
-		$data = "";
-		
-		$transfer = $this->_connectPassiveTransport('I');
-		
-		try
-		{
-			$resp = $this->_sendCommand("RETR $fn");
-			
-			if (($resp->code != 150) && ($resp->code != 125))
-			{
-				throw new FtpAlternative_FtpException("get(): RETR command returned \"$resp\"", $resp);
-			}
-			
-			// データ受信
-			$data = $transfer->recvall();
-			$transfer->close();
-		}
-		catch (Exception $ex)
-		{
-			$transfer->close();
-			throw $ex;
-		}
-		
-		// 完了の応答
-		$resp = $this->_recvResponse();
-		
-		if (($resp->code != 226) && ($resp->code != 250) && ($resp->code != 200))
-		{
-			throw new FtpAlternative_FtpException("get(): RETR complete returned \"$resp\"", $resp);
-		}
-		
-		return $data;
+		return $this->_getdata(__FUNCTION__, 'RETR', $fn, 'I');
 	}
 	
 	/**
@@ -374,20 +343,23 @@ class FtpAlternative_FtpClient
 	}
 	
 	/**
-	 * リストを得る
+	 * データ転送ポートと接続してコマンドの結果を得る
 	 *
-	 * @param string $dir
+	 * @param string $func	呼び出し元関数名
+	 * @param string $cmd	FTPコマンド
+	 * @param string $arg	引数
+	 * @param string $type	データ転送のタイプ ... A or I
 	 *
-	 * @return array
+	 * @return string
 	 *
 	 * @throws FtpAlternative_FtpException
-	 * @throws RuntimeException
+	 * @throws Exception
 	 */
-	public function _getlist($func, $cmd, $arg)
+	public function _getdata($func, $cmd, $arg, $type)
 	{
 		$data = "";
 		
-		$transfer = $this->_connectPassiveTransport('A');
+		$transfer = $this->_connectPassiveTransport($type);
 		
 		try
 		{
@@ -396,7 +368,7 @@ class FtpAlternative_FtpClient
 			if (($resp->code == 226))
 			{
 				$transfer->close();
-				return array();
+				return "";
 			}
 			
 			if (($resp->code != 150) && ($resp->code != 125))
@@ -417,12 +389,36 @@ class FtpAlternative_FtpClient
 		// 完了の応答
 		$resp = $this->_recvResponse();
 		
-		if (($resp->code != 226) && ($resp->code != 250))
+		if (($resp->code != 226) && ($resp->code != 250) && ($resp->code != 200))
 		{
 			throw new FtpAlternative_FtpException("$func(): $cmd complete returned \"$resp\"", $resp);
 		}
 		
-		return explode("\r\n", trim($data));
+		return $data;
+	}
+	
+	/**
+	 * データ転送ポートと接続してコマンドの結果を得る
+	 *
+	 * @param string $func	呼び出し元関数名
+	 * @param string $cmd	FTPコマンド
+	 * @param string $arg	引数
+	 *
+	 * @throws FtpAlternative_FtpException
+	 * @throws Exception
+	 */
+	public function _getlist($func, $cmd, $arg)
+	{
+		$data = $this->_getdata($func, $cmd, $arg, 'A');
+		
+		$data = trim($data);
+		
+		if ($data === "")
+		{
+			return array();
+		}
+		
+		return explode("\r\n", $data);
 	}
 	
 	/**
@@ -437,7 +433,7 @@ class FtpAlternative_FtpClient
 	 */
 	public function rawlist($dir)
 	{
-		return $this->_getlist(__FUNCTION__, 'LIST', $dir);
+		return $this->_getlist(__FUNCTION__, 'LIST', $dir, 'A');
 	}
 	
 	/**
