@@ -15,13 +15,6 @@
 		</whitelist>
 	</filter>
 	
-	<groups>
-		<exclude>
-			<group>ftpserver</group>
-			<group>posix</group>
-		</exclude>
-	</groups>
-	
 	<php>
 		<const name="FTP_HOST" value="127.0.0.1" />
 		<const name="FTP_PORT" value="21" />
@@ -37,4 +30,12 @@
 		<const name="HTTP_HOST" value="127.0.0.1" />
 		<const name="HTTP_PORT" value="80" />
 	</php>
+	
+	<groups>
+		<exclude>
+			<group>ftpserver</group>
+			<group>posix</group>
+		</exclude>
+	</groups>
+	
 </phpunit>

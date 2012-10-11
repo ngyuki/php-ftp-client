@@ -11,23 +11,23 @@
 		
 	<filter>
 		<whitelist>
-			<directory suffix=".php">../class/</directory>
+			<directory suffix=".php">../lib/</directory>
 		</whitelist>
 	</filter>
 	
 	<php>
-		<const name="FTP_HOST" value="127.0.0.1" />
-		<const name="FTP_PORT" value="21" />
-		<const name="FTP_USER" value="hoge" />
-		<const name="FTP_PASS" value="piyo" />
+		<const name="FTP_HOST" value="" />
+		<const name="FTP_PORT" value="" />
+		<const name="FTP_USER" value="" />
+		<const name="FTP_PASS" value="" />
 		
-		<const name="INVALID_USER" value="xxx" />
-		<const name="INVALID_PASS" value="xxx" />
+		<const name="INVALID_USER" value="" />
+		<const name="INVALID_PASS" value="" />
 		
-		<const name="REFUSE_HOST" value="127.0.0.1" />
-		<const name="REFUSE_PORT" value="12345" />
+		<const name="REFUSE_HOST" value="" />
+		<const name="REFUSE_PORT" value="" />
 		
-		<const name="HTTP_HOST" value="127.0.0.1" />
-		<const name="HTTP_PORT" value="80" />
+		<const name="HTTP_HOST" value="" />
+		<const name="HTTP_PORT" value="" />
 	</php>
 </phpunit>

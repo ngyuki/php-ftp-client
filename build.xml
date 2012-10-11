@@ -2,6 +2,7 @@
 <project name="php-project" basedir="." default="all">
 	
 	<target name="all" depends="init-reports,phpunit,phpdoc,phpmd,phpcpd" />
+	<target name="test" depends="init-reports,phpunit" />
 
 	<property name="OUT_DIR" value="reports" />
 	<property name="SRC_DIR" value="lib" />
@@ -17,10 +18,7 @@
 	
 	<target name="init-reports">
 		<delete includeemptydirs="true" failonerror="false">
-			<fileset dir="${OUT_DIR}">
-				<exclude name="index.html" />
-				<exclude name="top.html" />
-			</fileset>
+			<fileset dir="${OUT_DIR}" />
 		</delete>
 		<mkdir dir="${OUT_DIR}" />
 	</target>
