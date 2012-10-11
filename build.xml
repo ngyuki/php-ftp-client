@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="php-project" basedir="." default="all">
+	
+	<target name="all" depends="init-reports,phpunit,phpdoc,phpmd,phpcpd" />
+
+	<property name="OUT_DIR" value="reports" />
+	<property name="SRC_DIR" value="lib" />
+	<property name="TEST_DIR" value="tests" />
+	
+	<fileset id="src" dir="${SRC_DIR}">
+		<include name="**/*.php" />
+	</fileset>
+	
+	<fileset id="test" dir="${TEST_DIR}">
+		<include name="**/*Test.php" />
+	</fileset>
+	
+	<target name="init-reports">
+		<delete includeemptydirs="true" failonerror="false">
+			<fileset dir="${OUT_DIR}">
+				<exclude name="index.html" />
+				<exclude name="top.html" />
+			</fileset>
+		</delete>
+		<mkdir dir="${OUT_DIR}" />
+	</target>
+	
+	<target name="phpunit">
+		
+		<coverage-setup database="${OUT_DIR}/coverage.db">
+			<fileset refid="src" />
+		</coverage-setup>
+		
+		<phpunit printsummary="true" codecoverage="true" bootstrap="${TEST_DIR}/bootstrap.php">
+			<formatter type="plain" usefile="false" />
+			<formatter type="xml" outfile="${OUT_DIR}/junit.xml" />
+			<formatter type="clover" outfile="${OUT_DIR}/clover.xml" />
+			<batchtest>
+				<fileset refid="test" />
+			</batchtest>
+		</phpunit>
+		
+		<mkdir dir="${OUT_DIR}/phpunit" />
+		<phpunitreport infile="${OUT_DIR}/junit.xml" todir="${OUT_DIR}/phpunit" format="frames" />
+		
+		<mkdir dir="${OUT_DIR}/coverage" />
+		<coverage-report outfile="${OUT_DIR}/coverage.db">
+			<report todir="${OUT_DIR}/coverage" usesorttable="false" />
+		</coverage-report>
+		
+	</target>
+	
+	<target name="phpdoc">
+		<exec command="phpdoc -d ${SRC_DIR} -t ${OUT_DIR}/phpdoc --template=abstract"
+			checkreturn="true" passthru="true" logoutput="false" />
+	</target>
+	
+	<target name="phpmd">
+		<mkdir dir="${OUT_DIR}/phpmd" />
+		<phpmd rulesets="ruleset.xml">
+			<fileset refid="src" />
+			<formatter type="text" usefile="false" />
+			<formatter type="html" outfile="${OUT_DIR}/phpmd/index.html" />
+			<formatter type="xml" outfile="${OUT_DIR}/pmd.xml" />
+		</phpmd>
+	</target>
+	
+	<target name="phpcpd">
+		<mkdir dir="${OUT_DIR}/phpcpd" />
+		<phpcpd minLines="5" minTokens="70">
+			<fileset refid="src" />
+			<formatter type="default" useFile="false" />
+			<formatter type="default" outfile="${OUT_DIR}/phpcpd/index.txt" />
+			<formatter type="pmd" outfile="${OUT_DIR}/cpd.xml" />
+		</phpcpd>
+	</target>
+	
+</project>
+
+<!--
+	http://www.phing.info/docs/guide/stable/
+-->

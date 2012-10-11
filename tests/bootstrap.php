@@ -1,9 +1,9 @@
 <?php
-require_once dirname(__DIR__) . '/class/FtpAlternative/autoload.php';
+require_once dirname(__DIR__) . '/lib/FtpAlternative/autoload.php';
 
 spl_autoload_register(function($name) {
 	
-	$name = str_replace("_", DIRECTORY_SEPARATOR, $name) . ".php";
+	$name = str_replace('_', DIRECTORY_SEPARATOR, $name) . '.php';
 	$dirs = array(__DIR__, __DIR__  . DIRECTORY_SEPARATOR . 'class');
 	
 	foreach ($dirs as $dir)

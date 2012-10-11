@@ -3,6 +3,7 @@
  * @author ng
  * @group posix
  * @group server
+ * @requires function pcntl_fork
  */
 class FtpAlternative_DummyServerTest extends PHPUnit_Framework_TestCase
 {

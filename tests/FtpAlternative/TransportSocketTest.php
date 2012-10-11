@@ -2,6 +2,7 @@
 /**
  * @author ng
  * @group posix
+ * @requires function pcntl_fork
  */
 class FtpAlternative_TransportSocketTest extends PHPUnit_Framework_TestCase
 {

@@ -2,7 +2,6 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="https://raw.github.com/sebastianbergmann/phpunit/master/phpunit.xsd"
 	bootstrap="bootstrap.php"
-	colors="false"
 >
 	<testsuites>
 		<testsuite name="tests">
@@ -12,14 +11,14 @@
 		
 	<filter>
 		<whitelist>
-			<directory suffix=".php">../class/</directory>
+			<directory suffix=".php">../lib/</directory>
 		</whitelist>
 	</filter>
 	
 	<groups>
 		<exclude>
+			<group>ftpserver</group>
 			<group>posix</group>
-			<group>realserver</group>
 		</exclude>
 	</groups>
 	

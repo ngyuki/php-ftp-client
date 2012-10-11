@@ -1,8 +1,7 @@
 <?php
 /**
  * @author ng
- * @group realserver
- * @group server
+ * @group ftpserver
  */
 class FtpAlternative_RealServerTest extends PHPUnit_Framework_TestCase
 {
