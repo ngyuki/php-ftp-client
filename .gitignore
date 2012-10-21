@@ -1,6 +1,5 @@
 /.buildpath
 /.project
 /.settings
-/phpdoc
-/report
-reports
+/reports
+/tests/phpunit.xml

@@ -17,60 +17,49 @@
 	
 	<target name="init-reports">
 		<delete includeemptydirs="true" failonerror="false">
-			<fileset dir="${OUT_DIR}">
-				<exclude name="index.html" />
-				<exclude name="top.html" />
-			</fileset>
+			<fileset dir="${OUT_DIR}" />
 		</delete>
 		<mkdir dir="${OUT_DIR}" />
 	</target>
 	
 	<target name="phpunit">
 		
-		<coverage-setup database="${OUT_DIR}/coverage.db">
-			<fileset refid="src" />
-		</coverage-setup>
+		<resolvepath propertyName="OUT_DIR" file="${OUT_DIR}"/>
+		<resolvepath propertyName="SRC_DIR" file="${SRC_DIR}"/>
+		<resolvepath propertyName="TEST_DIR" file="${TEST_DIR}"/>
 		
-		<phpunit printsummary="true" codecoverage="true" bootstrap="${TEST_DIR}/bootstrap.php">
-			<formatter type="plain" usefile="false" />
-			<formatter type="xml" outfile="${OUT_DIR}/junit.xml" />
-			<formatter type="clover" outfile="${OUT_DIR}/clover.xml" />
-			<batchtest>
-				<fileset refid="test" />
-			</batchtest>
-		</phpunit>
-		
-		<mkdir dir="${OUT_DIR}/phpunit" />
-		<phpunitreport infile="${OUT_DIR}/junit.xml" todir="${OUT_DIR}/phpunit" format="frames" />
-		
-		<mkdir dir="${OUT_DIR}/coverage" />
-		<coverage-report outfile="${OUT_DIR}/coverage.db">
-			<report todir="${OUT_DIR}/coverage" usesorttable="false" />
-		</coverage-report>
+		<exec executable="phpunit" dir="tests" checkreturn="true" passthru="true" logoutput="false">
+			<arg value="--log-junit=${OUT_DIR}/junit.xml" />
+			<arg value="--coverage-clover=${OUT_DIR}/clover.xml" />
+			<arg value="--coverage-html=${OUT_DIR}/coverage/" />
+		</exec>
 		
 	</target>
 	
 	<target name="phpdoc">
-		<exec command="phpdoc -d ${SRC_DIR} -t ${OUT_DIR}/phpdoc --template=abstract"
-			checkreturn="true" passthru="true" logoutput="false" />
+		
+		<exec executable="phpdoc" checkreturn="true" passthru="true" logoutput="false">
+			<arg value="--target=${OUT_DIR}/phpdoc" />
+			<arg value="--directory=${SRC_DIR}" />
+			<arg value="--template=abstract" />
+		</exec>
+		
 	</target>
 	
 	<target name="phpmd">
-		<mkdir dir="${OUT_DIR}/phpmd" />
 		<phpmd rulesets="ruleset.xml">
 			<fileset refid="src" />
 			<formatter type="text" usefile="false" />
-			<formatter type="html" outfile="${OUT_DIR}/phpmd/index.html" />
+			<formatter type="html" outfile="${OUT_DIR}/pmd.html" />
 			<formatter type="xml" outfile="${OUT_DIR}/pmd.xml" />
 		</phpmd>
 	</target>
 	
 	<target name="phpcpd">
-		<mkdir dir="${OUT_DIR}/phpcpd" />
 		<phpcpd minLines="5" minTokens="70">
 			<fileset refid="src" />
 			<formatter type="default" useFile="false" />
-			<formatter type="default" outfile="${OUT_DIR}/phpcpd/index.txt" />
+			<formatter type="default" outfile="${OUT_DIR}/cpd.txt" />
 			<formatter type="pmd" outfile="${OUT_DIR}/cpd.xml" />
 		</phpcpd>
 	</target>
