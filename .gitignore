@@ -3,3 +3,4 @@
 /.settings
 /reports
 /tests/phpunit.xml
+/tests/phpunit-win.xml
