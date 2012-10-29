@@ -38,15 +38,34 @@ class FtpAlternative_FtpResponse
 	 * @param string $mesg
 	 * @param string $line
 	 */
-	public function __construct($code, $mesg, $line)
+	public function __construct($code, $mesg, $line = null)
 	{
 		ASSERT(' is_null($code) || is_int($code) ');
 		ASSERT(' is_string($mesg) ');
-		ASSERT(' is_string($line) ');
+		
+		if ($line === null)
+		{
+			$line = "$code $mesg";
+		}
 		
 		$this->_line = $line;
 		$this->_code = $code;
 		$this->_mesg = $mesg;
+	}
+	
+	public function getResponseLine()
+	{
+		return $this->_line;
+	}
+	
+	public function getCode()
+	{
+		return $this->_code;
+	}
+	
+	public function getMessage()
+	{
+		return $this->_mesg;
 	}
 	
 	/**
