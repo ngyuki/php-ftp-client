@@ -1,4 +1,6 @@
 <?php
+namespace ngyuki\Tests;
+
 declare(ticks = 1);
 
 /**
@@ -12,7 +14,7 @@ class ProcessFork
 	 * @var int
 	 */
 	private $_pid;
-	
+
 	/**
 	 * デストラクタ
 	 */
@@ -20,7 +22,7 @@ class ProcessFork
 	{
 		$this->term();
 	}
-	
+
 	/**
 	 * サーバの実行
 	 *
@@ -28,15 +30,15 @@ class ProcessFork
 	 */
 	public function fork($action)
 	{
-		ASSERT(' $this->_pid === null ');
-		
+		ASSERT('$this->_pid === null');
+
 		$pid = pcntl_fork();
-		
+
 		if ($pid == -1)
 		{
-			throw new RuntimeException("pcntl_fork(): unknown error");
+			throw new \RuntimeException("pcntl_fork(): unknown error");
 		}
-		
+
 		if ($pid)
 		{
 			$this->_pid = $pid;
@@ -44,21 +46,21 @@ class ProcessFork
 		else
 		{
 			$this->_pid = false;
-			
+
 			try
 			{
 				$this->_init();
 				call_user_func($action);
 				$this->term();
 			}
-			catch (Exception $ex)
+			catch (\Exception $ex)
 			{
 				$this->_except($ex);
 				$this->term();
 			}
 		}
 	}
-	
+
 	/**
 	 * 子プロセスの終了
 	 */
@@ -73,42 +75,42 @@ class ProcessFork
 		else if ($this->_pid)
 		{
 			$pid = $this->_pid;
-			
+
 			if (pcntl_waitpid($pid, $st, WNOHANG) == 0)
 			{
 				posix_kill($pid, SIGTERM);
 				$ret = pcntl_waitpid($pid, $st);
 			}
-			
+
 			$this->_pid = null;
 		}
 	}
-	
+
 	/**
 	 * 子プロセスの初期化
 	 */
 	private function _init()
 	{
 		$self = $this;
-		
+
 		pcntl_signal(SIGTERM, SIG_DFL);
-		
+
 		// 出力をすべて破棄
 		ob_start(function(){});
-		
+
 		// PHPエラーで終了
 		set_error_handler(function($errno, $errstr, $errfile, $errline) {
-			throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+			throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
 		});
-		
+
 		// 未処理の例外で終了
 		set_exception_handler(function($ex) use ($self) {
 			$self->term();
 		});
-		
+
 		// 最大生存期間
 		$lifelimit = microtime(true) + 600;
-		
+
 		// 生存期間が過ぎたら終了
 		register_tick_function(function() use ($self, $lifelimit) {
 			if (microtime(true) >= $lifelimit)
@@ -117,15 +119,15 @@ class ProcessFork
 			}
 		});
 	}
-	
-	private function _except(Exception $ex)
+
+	private function _except(\Exception $ex)
 	{
 		$display = ini_get('display_errors');
-		
+
 		if ($display)
 		{
 			$stream = null;
-			
+
 			if (strtolower($display) === 'stderr')
 			{
 				if (defined('STDERR') && is_resource(STDERR))
@@ -133,7 +135,7 @@ class ProcessFork
 					$stream = STDERR;
 				}
 			}
-			
+
 			if ($stream === null)
 			{
 				if (defined('STDOUT') && is_resource(STDOUT))
@@ -141,7 +143,7 @@ class ProcessFork
 					$stream = STDOUT;
 				}
 			}
-			
+
 			if ($stream === null)
 			{
 				echo $ex;
@@ -151,9 +153,9 @@ class ProcessFork
 				fputs($stream, $ex);
 			}
 		}
-		
+
 		$log = ini_get('log_errors');
-		
+
 		if ($log)
 		{
 			error_log($ex);

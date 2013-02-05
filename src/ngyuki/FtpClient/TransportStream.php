@@ -1,31 +1,35 @@
 <?php
 /**
- * @package   FtpAlternative
+ * @package   ngyuki\FtpClient
  * @copyright 2012 tsyk goto
  * @author    tsyk goto
  * @license   http://www.opensource.org/licenses/mit-license.php  MIT License
- * @link      https://github.com/ngyuki/FtpAlternative
+ * @link      https://github.com/ngyuki/php-ftp-client
  */
 
+namespace ngyuki\FtpClient;
+
+use RuntimeException;
+
 /**
- * @package   FtpAlternative
+ * @package   ngyuki\FtpClient
  * @copyright 2012 tsyk goto
  * @author    tsyk goto
  * @license   http://www.opensource.org/licenses/mit-license.php  MIT License
- * @link      https://github.com/ngyuki/FtpAlternative
+ * @link      https://github.com/ngyuki/php-ftp-client
  */
-class FtpAlternative_TransportStream implements FtpAlternative_TransportInterface
+class TransportStream implements TransportInterface
 {
 	/**
 	 * @var resource ソケットストリームリソース
 	 */
 	private $_stream;
-	
+
 	/**
 	 * @var boolean EOF
 	 */
 	private $_eof = false;
-	
+
 	/**
 	 * デストラクタ
 	 */
@@ -33,7 +37,7 @@ class FtpAlternative_TransportStream implements FtpAlternative_TransportInterfac
 	{
 		$this->close();
 	}
-	
+
 	/**
 	 * 接続する
 	 *
@@ -48,18 +52,18 @@ class FtpAlternative_TransportStream implements FtpAlternative_TransportInterfac
 		ASSERT(' is_string($host) && strlen($host) ');
 		ASSERT(' is_int($port)    && ($port    > 0) ');
 		ASSERT(' is_int($timeout) && ($timeout > 0) ');
-		
-		$handler = new FtpAlternative_ErrorHandler();
-		
+
+		$handler = new ErrorHandler();
+
 		try
 		{
 			$errno = 0;
 			$errstr = "";
-			
+
 			// stream_socket_client → RST でもタイムアウトまで待ってしまう・・・
 			$url = "tcp://$host:$port";
 			$stream = stream_socket_client($url, $errno, $errstr, $timeout);
-			
+
 			if (is_resource($stream) == false)
 			{
 				// @codeCoverageIgnoreStart
@@ -73,33 +77,33 @@ class FtpAlternative_TransportStream implements FtpAlternative_TransportInterfac
 				}
 				// @codeCoverageIgnoreEnd
 			}
-			
+
 			if (stream_set_blocking($stream, true) == false)
 			{
 				// @codeCoverageIgnoreStart
 				throw new RuntimeException("stream_set_blocking(): unknown error");
 				// @codeCoverageIgnoreEnd
 			}
-			
+
 			if (stream_set_timeout($stream, $timeout) == false)
 			{
 				// @codeCoverageIgnoreStart
 				throw new RuntimeException("stream_set_timeout(): unknown error");
 				// @codeCoverageIgnoreEnd
 			}
-			
+
 			$this->_stream = $stream;
 			$this->_eof = false;
-			
+
 			$handler->restore();
 		}
-		catch (Exception $ex)
+		catch (\Exception $ex)
 		{
 			$handler->restore();
 			throw $ex;
 		}
 	}
-	
+
 	/**
 	 * 接続済なら true を返す
 	 *
@@ -109,7 +113,7 @@ class FtpAlternative_TransportStream implements FtpAlternative_TransportInterfac
 	{
 		return is_resource($this->_stream);
 	}
-	
+
 	/**
 	 * 接続を閉じる
 	 */
@@ -122,7 +126,7 @@ class FtpAlternative_TransportStream implements FtpAlternative_TransportInterfac
 			$this->_eof = false;
 		}
 	}
-	
+
 	/**
 	 * fgets wrapper
 	 *
@@ -134,39 +138,39 @@ class FtpAlternative_TransportStream implements FtpAlternative_TransportInterfac
 		{
 			throw new RuntimeException("fgets(): end of stream");
 		}
-		
+
 		if (feof($this->_stream))
 		{
 			$this->_eof = true;
 			return null;
 		}
-		
+
 		$recv = fgets($this->_stream, 1024);
-		
+
 		if ($recv === false)
 		{
 			$meta = stream_get_meta_data($this->_stream);
-			
+
 			if (is_array($meta))
 			{
 				if (isset($meta['timed_out']) && $meta['timed_out'])
 				{
 					throw new RuntimeException("fgets(): timeout");
 				}
-				
+
 				if (isset($meta['eof']) && $meta['eof'])
 				{
 					$this->_eof = true;
 					return null;
 				}
 			}
-			
+
 			throw new RuntimeException("fgets(): unknown error");
 		}
-		
+
 		return $recv;
 	}
-	
+
 	/**
 	 * データを全て受信する
 	 *
@@ -177,42 +181,42 @@ class FtpAlternative_TransportStream implements FtpAlternative_TransportInterfac
 	public function recvall()
 	{
 		ASSERT('is_resource($this->_stream)');
-		
-		$handler = new FtpAlternative_ErrorHandler();
-		
+
+		$handler = new ErrorHandler();
+
 		try
 		{
 			$data = array();
-			
+
 			for(;;)
 			{
 				// stream_get_contents → サーバが応答無い場合にタイムアウトせずに待ち続ける
 				// fgets → たまに EOF に達した時に false が返る？
 				//       → タイムアウトでも false が返るので eof と timeout を判断して処理する
-				
+
 				$recv = $this->_fgets();
-				
+
 				if ($recv === null)
 				{
 					break;
 				}
-				
+
 				$data[] = $recv;
 			}
-			
+
 	        $data = implode("", $data);
-	        
+
 	        $handler->restore();
-	        
+
 	        return $data;
 		}
-		catch (Exception $ex)
+		catch (\Exception $ex)
 		{
 			$handler->restore();
 			throw $ex;
 		}
 	}
-	
+
 	/**
 	 * データを一行受信する
 	 *
@@ -223,42 +227,42 @@ class FtpAlternative_TransportStream implements FtpAlternative_TransportInterfac
 	public function recvline()
 	{
 		ASSERT('is_resource($this->_stream)');
-		
-		$handler = new FtpAlternative_ErrorHandler();
-		
+
+		$handler = new ErrorHandler();
+
 		try
 		{
 			$data = array();
-			
+
 			for(;;)
 			{
 				$recv = $this->_fgets();
-				
+
 				if ($recv === null)
 				{
 					break;
 				}
-				
+
 				$data[] = $recv;
-				
+
 				if (strpos($recv, "\n") !== false)
 				{
 					break;
 				}
 	        }
-			
+
 	        $data = implode("", $data);
-	        
+
 	        $handler->restore();
 	        return $data;
 		}
-		catch (Exception $ex)
+		catch (\Exception $ex)
 		{
 			$handler->restore();
 			throw $ex;
 		}
 	}
-	
+
 	/**
 	 * データを送信する
 	 *
@@ -270,31 +274,31 @@ class FtpAlternative_TransportStream implements FtpAlternative_TransportInterfac
 	{
 		ASSERT(' is_resource($this->_stream) ');
 		ASSERT(' is_string($data) ');
-		
-		$handler = new FtpAlternative_ErrorHandler();
-		
+
+		$handler = new ErrorHandler();
+
 		try
 		{
 			$pos = 0;
 			$len = strlen($data);
-			
+
 			while ($pos < $len)
 			{
 				$n = fwrite($this->_stream, substr($data, $pos));
-				
+
 				if ($n == 0)
 				{
 					// @codeCoverageIgnoreStart
 					throw new RuntimeException("fwrite(): unknown error");
 					// @codeCoverageIgnoreEnd
 				}
-				
+
 				$pos += $n;
 			}
-			
+
 			$handler->restore();
 		}
-		catch (Exception $ex)
+		catch (\Exception $ex)
 		{
 			$handler->restore();
 			throw $ex;

@@ -1,6 +1,5 @@
-/.buildpath
-/.project
-/.settings
-/reports
-/tests/phpunit.xml
-/tests/phpunit-win.xml
+/composer.phar
+/composer.lock
+/vendor
+/phpunit.xml
+/phpunit-win.xml

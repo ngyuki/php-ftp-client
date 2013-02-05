@@ -1,19 +1,5 @@
 <?php
-require_once dirname(__DIR__) . '/lib/FtpAlternative/autoload.php';
-
-spl_autoload_register(function($name) {
-	
-	$name = str_replace('_', DIRECTORY_SEPARATOR, $name) . '.php';
-	$dirs = array(__DIR__, __DIR__  . DIRECTORY_SEPARATOR . 'class');
-	
-	foreach ($dirs as $dir)
-	{
-		$fn = $dir . DIRECTORY_SEPARATOR . $name;
-		
-		if (is_readable($fn))
-		{
-			require $fn;
-			return;
-		}
-	}
+call_user_func(function () {
+    $loader = require __DIR__ . '/../vendor/autoload.php';
+    $loader->add('ngyuki\Tests', __DIR__);
 });
