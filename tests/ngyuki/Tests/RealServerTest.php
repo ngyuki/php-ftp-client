@@ -57,17 +57,22 @@ class RealServerTest extends \PHPUnit_Framework_TestCase
      */
     function success()
     {
-        if (defined('FTP_HOST') == false || strlen(FTP_HOST) == 0)
+        $host = getenv('FTP_HOST');
+        $port = getenv('FTP_PORT');
+        $user = getenv('FTP_USER');
+        $pass = getenv('FTP_PASS');
+
+        if (strlen($host) == 0 || strlen($port) == 0 || strlen($user) == 0 || strlen($pass) == 0)
         {
-            $this->markTestSkipped("require const FTP_HOST");
+            $this->markTestSkipped("require env FTP_HOST, FTP_PORT, FTP_USER, FTP_PASS");
         }
 
         $ftp = new FtpClient();
 
         try
         {
-            $ftp->connect(FTP_HOST, (int)FTP_PORT, 5);
-            $ftp->login(FTP_USER, FTP_PASS);
+            $ftp->connect($host, (int)$port, 5);
+            $ftp->login($user, $pass);
 
             $this->init_empty($ftp);
 
@@ -188,9 +193,12 @@ class RealServerTest extends \PHPUnit_Framework_TestCase
      */
     function connect_refuse()
     {
-        if (defined('REFUSE_HOST') == false || strlen(REFUSE_HOST) == 0)
+        $host = getenv('FTP_HOST');
+        $port = getenv('REFUSE_PORT');
+
+        if (strlen($host) == 0 || strlen($port) == 0)
         {
-            $this->markTestSkipped("require const REFUSE_HOST");
+            $this->markTestSkipped("require env FTP_HOST, REFUSE_PORT");
         }
 
         $ftp = new FtpClient();
@@ -198,7 +206,7 @@ class RealServerTest extends \PHPUnit_Framework_TestCase
         try
         {
             // ポートが閉じていて拒否される
-            $ftp->connect(REFUSE_HOST, (int)REFUSE_PORT, 1);
+            $ftp->connect($host, (int)$port, 1);
             $this->fail();
         }
         catch (RuntimeException $ex)
@@ -213,9 +221,12 @@ class RealServerTest extends \PHPUnit_Framework_TestCase
      */
     function connect_nothing()
     {
-        if (defined('HTTP_HOST') == false || strlen(HTTP_HOST) == 0)
+        $host = getenv('FTP_HOST');
+        $port = getenv('NEVER_PORT');
+
+        if (strlen($host) == 0 || strlen($port) == 0)
         {
-            $this->markTestSkipped("require const HTTP_HOST");
+            $this->markTestSkipped("require env FTP_HOST, NEVER_PORT");
         }
 
         $ftp = new FtpClient();
@@ -223,7 +234,7 @@ class RealServerTest extends \PHPUnit_Framework_TestCase
         try
         {
             // ポートは開いているが応答が無い
-            $ftp->connect(HTTP_HOST, (int)HTTP_PORT, 1);
+            $ftp->connect($host, (int)$port, 1);
             $this->fail();
         }
         catch (RuntimeException $ex)
@@ -238,18 +249,23 @@ class RealServerTest extends \PHPUnit_Framework_TestCase
      */
     function login_errors()
     {
-        if (defined('FTP_HOST') == false || strlen(FTP_HOST) == 0)
+        $host = getenv('FTP_HOST');
+        $port = getenv('FTP_PORT');
+        $user = getenv('INVALID_USER');
+        $pass = getenv('INVALID_PASS');
+
+        if (strlen($host) == 0 || strlen($port) == 0 || strlen($user) == 0 || strlen($pass) == 0)
         {
-            $this->markTestSkipped("require const FTP_HOST");
+            $this->markTestSkipped("require env FTP_HOST, FTP_PORT, INVALID_USER, INVALID_PASS");
         }
 
         $ftp = new FtpClient();
 
-        $ftp->connect(FTP_HOST, (int)FTP_PORT, 5);
+        $ftp->connect($host, (int)$port, 5);
 
         try
         {
-            $ftp->login(INVALID_USER, INVALID_PASS);
+            $ftp->login($user, $pass);
             $this->fail();
         }
         catch (FtpException $ex)

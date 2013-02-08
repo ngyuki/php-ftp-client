@@ -15,20 +15,15 @@
         </whitelist>
     </filter>
 
-    <php>
-        <const name="FTP_HOST" value="" />
-        <const name="FTP_PORT" value="" />
-        <const name="FTP_USER" value="" />
-        <const name="FTP_PASS" value="" />
-        
-        <const name="INVALID_USER" value="" />
-        <const name="INVALID_PASS" value="" />
-        
-        <const name="REFUSE_HOST" value="" />
-        <const name="REFUSE_PORT" value="" />
-        
-        <const name="HTTP_HOST" value="" />
-        <const name="HTTP_PORT" value="" />
-    </php>
+    <php><!--
+        <env name="FTP_HOST" value="" />
+        <env name="FTP_PORT" value="" />
+        <env name="FTP_USER" value="" />
+        <env name="FTP_PASS" value="" />
+        <env name="INVALID_USER" value="" />
+        <env name="INVALID_PASS" value="" />
+        <env name="REFUSE_PORT" value="" />
+        <env name="NEVER_PORT" value="" />
+    --></php>
 
 </phpunit>
