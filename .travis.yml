@@ -19,6 +19,7 @@ before_install:
       AuthGroupFile /tmp/ftpd.group
       AuthOrder mod_auth_file.c
       DefaultRoot ~
+      ListOptions -a
     " > /tmp/proftpd.conf
   - cat /tmp/proftpd.conf
   - sudo /usr/sbin/proftpd -c /tmp/proftpd.conf
