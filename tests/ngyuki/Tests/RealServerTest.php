@@ -13,9 +13,10 @@ class RealServerTest extends \PHPUnit_Framework_TestCase
 {
     function init_empty(FtpClient $ftp)
     {
-        $this->rmdir_f($ftp, __CLASS__);
-        $ftp->mkdir(__CLASS__);
-        $ftp->chdir(__CLASS__);
+        $dir = str_replace("\\", "_", __CLASS__);
+        $this->rmdir_f($ftp, $dir);
+        $ftp->mkdir($dir);
+        $ftp->chdir($dir);
     }
 
     public function rmdir_f(FtpClient $ftp, $dir)
