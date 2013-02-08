@@ -5,8 +5,37 @@ php:
   - 5.4
   - 5.5
 
+before_install:
+  - sudo apt-get install proftpd
+  - echo pass |
+    ftpasswd --file /tmp/ftpd.passwd --passwd --name hoge --uid 99 -gid 99 --home /tmp/ftp --shell /bin/sh --stdin
+  - ftpasswd --file /tmp/ftpd.group --group --name piyo --gid 99
+  - mkdir /tmp/ftp
+  - sudo chown 99.99 /tmp/ftp
+  - |+
+    echo "
+      Port 10021
+      AuthUserFile /tmp/ftpd.passwd
+      AuthGroupFile /tmp/ftpd.group
+      AuthOrder mod_auth_file.c
+      DefaultRoot ~
+    " > /tmp/proftpd.conf
+  - cat /tmp/proftpd.conf
+  - sudo /usr/sbin/proftpd -c /tmp/proftpd.conf
+  - sudo netstat -ln
+
 before_script:
   - composer install
+
+env:
+  - FTP_HOST=127.0.0.1
+    FTP_PORT=10021
+    FTP_USER=hoge
+    FTP_PASS=pass
+    INVALID_USER=xxx
+    INVALID_PASS=uso
+    REFUSE_PORT=1
+    NEVER_PORT=22
 
 script:
   - phpunit --colors --coverage-text
@@ -14,4 +43,3 @@ script:
 branches:
   except:
     - /\//
-  
