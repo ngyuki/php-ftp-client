@@ -1,10 +1,4 @@
 {
-    "repositories": [
-        {
-            "packagist": false
-        }
-    ],
-    
     "name": "ngyuki/php-ftp-client",
     "type": "library",
     "description": "php-ftp-client",
@@ -12,10 +6,10 @@
     "homepage": "https://github.com/ngyuki/php-ftp-client",
     "license": "MIT",
     "authors": [
-        {
-            "name": "tsyk goto",
-            "email": "ngyuki.ts@gmail.com"
-        }
+        { "name": "Toshiyuki Goto", "email": "ngyuki.ts@gmail.com" }
+    ],
+    "repositories": [
+        { "packagist": false }
     ],
     "require": {
         "php": ">=5.3.0"

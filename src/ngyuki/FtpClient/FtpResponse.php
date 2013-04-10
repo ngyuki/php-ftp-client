@@ -1,8 +1,8 @@
 <?php
 /**
  * @package   ngyuki\FtpClient
- * @copyright 2012 tsyk goto
- * @author    tsyk goto
+ * @copyright 2012 Toshiyuki Goto <ngyuki.ts@gmail.com>
+ * @author    Toshiyuki Goto <ngyuki.ts@gmail.com>
  * @license   http://www.opensource.org/licenses/mit-license.php  MIT License
  * @link      https://github.com/ngyuki/php-ftp-client
  */
@@ -11,8 +11,8 @@ namespace ngyuki\FtpClient;
 
 /**
  * @package   ngyuki\FtpClient
- * @copyright 2012 tsyk goto
- * @author    tsyk goto
+ * @copyright 2012 Toshiyuki Goto <ngyuki.ts@gmail.com>
+ * @author    Toshiyuki Goto <ngyuki.ts@gmail.com>
  * @license   http://www.opensource.org/licenses/mit-license.php  MIT License
  * @link      https://github.com/ngyuki/php-ftp-client
  */
