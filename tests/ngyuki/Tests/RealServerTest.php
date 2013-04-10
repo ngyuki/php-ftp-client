@@ -81,6 +81,8 @@ class RealServerTest extends \PHPUnit_Framework_TestCase
             $ftp->put("a.txt", $data);
             $this->assertSame($data, $ftp->get("a.txt"));
 
+            $ftp->site("CHMOD 0755 a.txt");
+
             try
             {
                 $ftp->mkdir("a.txt");

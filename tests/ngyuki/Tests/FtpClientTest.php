@@ -1404,4 +1404,43 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
             $this->assertContains("recvline is empty", $ex->getMessage());
         }
     }
+
+    /**
+     * @test
+     */
+    function site()
+    {
+        $this->prepareConnection();
+
+        $this->control->addPattern("@^SITE +hoge.txt\s*$@", "200");
+        $this->ftp->site("hoge.txt");
+
+        /// invalid_respcode
+        $this->control->addPattern("@^SITE +hoge.txt\s*$@", "947");
+
+        try
+        {
+            $this->ftp->site("hoge.txt");
+            $this->fail();
+        }
+        catch (FtpException $ex)
+        {
+            $this->assertEquals(947, $ex->getCode());
+            $this->assertContains("site(): SITE command returned", $ex->getMessage());
+        }
+
+        /// no responce
+        $this->control->addPattern("@^SITE +hoge.txt\s*$@", null);
+
+        try
+        {
+            $this->ftp->site("hoge.txt");
+            $this->fail();
+        }
+        catch (\RuntimeException $ex)
+        {
+            $this->assertEquals('RuntimeException', get_class($ex));
+            $this->assertContains("recvline is empty", $ex->getMessage());
+        }
+    }
 }

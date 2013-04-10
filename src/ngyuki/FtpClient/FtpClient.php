@@ -586,6 +586,26 @@ class FtpClient
     }
 
     /**
+     * SITE コマンドを発行する
+     *
+     * @param string $cmd
+     *
+     * @throws FtpException
+     * @throws \RuntimeException
+     */
+    public function site($cmd)
+    {
+        ASSERT(' is_string($cmd) && strlen($cmd) ');
+
+        $resp = $this->_sendCommand("SITE $cmd");
+
+        if ($resp->code != 200)
+        {
+            throw new FtpException("site(): SITE command returned \"$resp\"", $resp);
+        }
+    }
+
+    /**
      * コマンドを送信して応答を受信する
      *
      * @param string $cmd
