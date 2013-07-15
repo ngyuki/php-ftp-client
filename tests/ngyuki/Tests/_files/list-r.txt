@@ -1,0 +1,21 @@
+drwxr-xr-x  11 hoge     hoge         4096 Jul 15 10:19 .
+drwxr-xr-x  11 hoge     hoge         4096 Jul 16 10:14 ..
+drwxr-xr-x   3 hoge     hoge         4096 Jul 11 01:02 aa
+drwxr-xr-x   3 hoge     hoge         4096 Oct 28  2012 bb
+-rw-r--r--   1 hoge     hoge    123456789 Jul 11 01:02 z.txt
+
+aa:
+drwxr-xr-x   2 hoge     hoge         4096 Jul 11 10:12 .
+drwxr-xr-x  11 hoge     hoge         4096 Jul 12 10:54 ..
+drwxr-xr-x   2 hoge     hoge         4096 Oct 25  2012 cc
+-rw-r--r--   1 hoge     hoge            9 Jul 13 10:45 y.txt
+
+aa/cc:
+drwxr-xr-x   4 hoge     hoge         4096 Jun  4 01:57 .
+drwxr-xr-x  11 hoge     hoge         4096 Jul 16 10:36 ..
+-rw-r--r--   1 hoge     hoge            5 Jun  4 01:57 x.txt
+-rw-r--r--   1 hoge     hoge            9 Jul 14 10:44 .hta
+
+bb:
+drwxr-xr-x   2 hoge     hoge         4096 Nov 26  2012 .
+drwxr-xr-x  11 hoge     hoge         4096 Jul 11 10:17 ..
