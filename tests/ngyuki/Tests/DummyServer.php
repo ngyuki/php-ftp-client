@@ -4,7 +4,7 @@ namespace ngyuki\Tests;
 declare(ticks = 1);
 
 /**
- * @author ng
+ * @author ngyuki
  */
 class DummyServer
 {

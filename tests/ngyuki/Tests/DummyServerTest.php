@@ -4,9 +4,8 @@ namespace ngyuki\Tests;
 use ngyuki\FtpClient\FtpClient;
 
 /**
- * @author ng
+ * @author ngyuki
  * @group posix
- * @group server
  * @requires function pcntl_fork
  */
 class DummyServerTest extends \PHPUnit_Framework_TestCase

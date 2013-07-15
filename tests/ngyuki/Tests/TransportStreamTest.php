@@ -5,7 +5,7 @@ use ngyuki\FtpClient\TransportStream;
 use RuntimeException;
 
 /**
- * @author ng
+ * @author ngyuki
  * @group posix
  * @requires function pcntl_fork
  */

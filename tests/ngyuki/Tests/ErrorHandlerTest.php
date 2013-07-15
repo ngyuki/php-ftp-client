@@ -4,7 +4,7 @@ namespace ngyuki\Tests;
 use ngyuki\FtpClient\ErrorHandler;
 
 /**
- * @author ng
+ * @author ngyuki
  */
 class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
 {

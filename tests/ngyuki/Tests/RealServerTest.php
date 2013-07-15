@@ -6,7 +6,7 @@ use ngyuki\FtpClient\FtpException;
 use RuntimeException;
 
 /**
- * @author ng
+ * @author ngyuki
  * @group ftpserver
  */
 class RealServerTest extends \PHPUnit_Framework_TestCase

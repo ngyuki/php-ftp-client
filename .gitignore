@@ -1,5 +1,5 @@
+/vendor
 /composer.phar
 /composer.lock
-/vendor
 /tests/phpunit.xml
-/tests/phpunit-win.xml
+/tests/phpunit.win.xml

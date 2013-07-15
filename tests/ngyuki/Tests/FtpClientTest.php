@@ -6,7 +6,7 @@ use ngyuki\FtpClient\FtpResponse;
 use ngyuki\FtpClient\FtpException;
 
 /**
- * @author ng
+ * @author ngyuki
  */
 class FtpClientTest extends \PHPUnit_Framework_TestCase
 {

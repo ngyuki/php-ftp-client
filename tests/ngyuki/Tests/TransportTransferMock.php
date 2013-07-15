@@ -4,7 +4,7 @@ namespace ngyuki\Tests;
 use ngyuki\FtpClient\TransportInterface;
 
 /**
- * @author ng
+ * @author ngyuki
  */
 class TransportTransferMock implements TransportInterface
 {

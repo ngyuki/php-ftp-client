@@ -6,7 +6,7 @@
     "homepage": "https://github.com/ngyuki/php-ftp-client",
     "license": "MIT",
     "authors": [
-        { "name": "Toshiyuki Goto", "email": "ngyuki.ts@gmail.com" }
+        { "name": "ngyuki", "email": "ngyuki.ts@gmail.com" }
     ],
     "repositories": [
         { "packagist": false }

@@ -4,7 +4,7 @@ namespace ngyuki\Tests;
 use ngyuki\FtpClient\FtpResponse;
 
 /**
- * @author ng
+ * @author ngyuki
  */
 class FtpResponseTest extends \PHPUnit_Framework_TestCase
 {

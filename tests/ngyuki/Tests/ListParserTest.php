@@ -6,7 +6,7 @@ use ngyuki\FtpClient\FileInfo\File;
 use ngyuki\FtpClient\FileInfo\Directory;
 
 /**
- * @author ng
+ * @author ngyuki
  */
 class ListParserTest extends \PHPUnit_Framework_TestCase
 {
