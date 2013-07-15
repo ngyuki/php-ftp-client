@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/ngyuki/php-ftp-client.png)](https://travis-ci.org/ngyuki/php-ftp-client)
+
 概要
 -----
 
