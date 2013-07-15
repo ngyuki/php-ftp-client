@@ -8,12 +8,13 @@ php:
 before_install:
   - sudo apt-get install proftpd
   - echo pass |
-    ftpasswd --file /tmp/ftpd.passwd --passwd --name hoge --uid 99 -gid 99 --home /tmp/ftp --shell /bin/sh --stdin
-  - ftpasswd --file /tmp/ftpd.group --group --name piyo --gid 99
+    ftpasswd --file /tmp/ftpd.passwd --passwd --name hoge --uid $(id -u) -gid $(id -g) --home /tmp/ftp --shell /bin/sh --stdin
+  - ftpasswd --file /tmp/ftpd.group --group --name piyo --gid $(id -g)
   - mkdir /tmp/ftp
-  - sudo chown 99.99 /tmp/ftp
+  - sudo chown $(id -u).$(id -g) /tmp/ftp
   - |+
     echo "
+      DefaultAddress 127.0.0.1
       Port 10021
       AuthUserFile /tmp/ftpd.passwd
       AuthGroupFile /tmp/ftpd.group
@@ -22,7 +23,7 @@ before_install:
       ListOptions -a
     " > /tmp/proftpd.conf
   - cat /tmp/proftpd.conf
-  - sudo /usr/sbin/proftpd -c /tmp/proftpd.conf
+  - sudo /usr/sbin/proftpd -c /tmp/proftpd.conf -S 127.0.0.1
   - sudo netstat -ln
 
 before_script:
@@ -33,13 +34,14 @@ env:
     FTP_PORT=10021
     FTP_USER=hoge
     FTP_PASS=pass
+    FTP_BASE=/tmp/ftp
     INVALID_USER=xxx
     INVALID_PASS=uso
     REFUSE_PORT=1
     NEVER_PORT=22
 
 script:
-  - phpunit --colors --coverage-text
+  - phpunit -c tests/ --colors --coverage-text
 
 branches:
   except:
