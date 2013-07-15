@@ -454,6 +454,42 @@ class FtpClient
     }
 
     /**
+     * ファイルのリストを得る
+     *
+     * @param string $dir
+     *
+     * @return \ArrayObject
+     *
+     * @throws FtpException
+     * @throws \RuntimeException
+     */
+    public function getList($dir)
+    {
+        $list = $this->_getlist(__FUNCTION__, 'LIST', $dir, 'A');
+
+        $parser = new ListParser();
+        return $parser->parseByArray($list);
+    }
+
+    /**
+     * ファイルのリストを再帰的に得る
+     *
+     * @param string $dir
+     *
+     * @return \ArrayObject
+     *
+     * @throws FtpException
+     * @throws \RuntimeException
+     */
+    public function getRecursiveList($dir)
+    {
+        $list = $this->_getlist(__FUNCTION__, 'LIST -R', $dir, 'A');
+
+        $parser = new ListParser();
+        return $parser->parseByArray($list);
+    }
+
+    /**
      * 現在のディレクトリを得る
      *
      * @return string

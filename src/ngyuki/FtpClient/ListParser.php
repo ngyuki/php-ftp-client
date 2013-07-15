@@ -25,6 +25,11 @@ class ListParser
     {
         $list = explode("\n", $out);
 
+        return $this->parseByArray($list);
+    }
+
+    public function parseByArray(array $list)
+    {
         $pat1 = '/(?:(d)|.)([rwxts-]{9})\s+(\w+)\s+([\w\d-()?.]+)\s+([\w\d-()?.]+)\s+(\w+)\s+(\S+\s+\S+\s+\S+)\s+(.+)/';
         $pat2 = '/^(.+):$/';
 

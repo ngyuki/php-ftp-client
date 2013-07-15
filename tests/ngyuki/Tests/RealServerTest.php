@@ -11,62 +11,26 @@ use RuntimeException;
  */
 class RealServerTest extends \PHPUnit_Framework_TestCase
 {
-    function init_empty(FtpClient $ftp)
-    {
-        $dir = str_replace("\\", "_", __CLASS__);
-        $this->rmdir_f($ftp, $dir);
-        $ftp->mkdir($dir);
-        $ftp->chdir($dir);
-    }
-
-    public function rmdir_f(FtpClient $ftp, $dir)
-    {
-        try
-        {
-            $ftp->delete($dir);
-            return;
-        }
-        catch (FtpException $ex)
-        {}
-
-        try
-        {
-            $ftp->chdir($dir);
-        }
-        catch (FtpException $ex)
-        {
-            return;
-        }
-
-        $list = $ftp->nlist(".");
-
-        foreach ($list as $fn)
-        {
-            if (preg_match("/^\.+$/", $fn) == 0)
-            {
-                $this->rmdir_f($ftp, $fn);
-            }
-        }
-
-        $ftp->chdir("../");
-
-        $ftp->rmdir($dir);
-    }
-
     /**
-     * @test
+     * テストに先立って接続とディレクトリを初期化する
      */
-    function success()
+    function initFtpClient()
     {
         $host = getenv('FTP_HOST');
         $port = getenv('FTP_PORT');
         $user = getenv('FTP_USER');
         $pass = getenv('FTP_PASS');
+        $base = getenv('FTP_BASE');
 
-        if (strlen($host) == 0 || strlen($port) == 0 || strlen($user) == 0 || strlen($pass) == 0)
+        if (strlen($host) == 0 || strlen($port) == 0 || strlen($user) == 0 || strlen($pass) == 0 || strlen($base) == 0)
         {
-            $this->markTestSkipped("require env FTP_HOST, FTP_PORT, FTP_USER, FTP_PASS");
+            $this->markTestSkipped("require env FTP_HOST, FTP_PORT, FTP_USER, FTP_PASS, FTP_BASE");
         }
+
+        $dir = str_replace("\\", "_", __CLASS__);
+
+        $base = escapeshellarg($base . DIRECTORY_SEPARATOR . $dir);
+        exec("rm -fr $base");
 
         $ftp = new FtpClient();
 
@@ -74,9 +38,27 @@ class RealServerTest extends \PHPUnit_Framework_TestCase
         {
             $ftp->connect($host, (int)$port, 5);
             $ftp->login($user, $pass);
+            $ftp->mkdir($dir);
+            $ftp->chdir($dir);
 
-            $this->init_empty($ftp);
+            return $ftp;
+        }
+        catch (\Exception $ex)
+        {
+            $ftp->close();
+            throw $ex;
+        }
+    }
 
+    /**
+     * @test
+     */
+    function success()
+    {
+        $ftp = $this->initFtpClient();
+
+        try
+        {
             $data = uniqid();
             $ftp->put("a.txt", $data);
             $this->assertSame($data, $ftp->get("a.txt"));
@@ -285,5 +267,48 @@ class RealServerTest extends \PHPUnit_Framework_TestCase
         {
             $this->assertEquals(500, $ex->getCode());
         }
+    }
+
+    /**
+     * @test
+     */
+    function getList_ok()
+    {
+        $ftp = $this->initFtpClient();
+
+        $ftp->mkdir("zxc");
+        $ftp->put(".abc", "");
+        $ftp->put("zxc/123", "");
+
+        $list = $ftp->getList(".");
+
+        $this->assertCount(2, $list);
+        $this->assertNotEmpty($list['.abc']);
+        $this->assertNotEmpty($list['zxc']);
+
+        $list = $ftp->getList("zxc");
+        $this->assertCount(1, $list);
+        $this->assertNotEmpty($list['123']);
+    }
+
+    /**
+     * @test
+     */
+    function getRecursiveList_ok()
+    {
+        $ftp = $this->initFtpClient();
+
+        $ftp->mkdir("zxc");
+        $ftp->mkdir("zxc/.abc");
+
+        $list = $ftp->getRecursiveList(".");
+
+        $this->assertCount(1, $list);
+        $this->assertNotEmpty($list['zxc']);
+
+        $list = $ftp->getRecursiveList("zxc");
+
+        $this->assertCount(1, $list);
+        $this->assertNotEmpty($list['.abc']);
     }
 }

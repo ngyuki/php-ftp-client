@@ -16,14 +16,15 @@
     </filter>
 
     <php><!--
-        <env name="FTP_HOST" value="" />
-        <env name="FTP_PORT" value="" />
-        <env name="FTP_USER" value="" />
-        <env name="FTP_PASS" value="" />
-        <env name="INVALID_USER" value="" />
-        <env name="INVALID_PASS" value="" />
-        <env name="REFUSE_PORT" value="" />
-        <env name="NEVER_PORT" value="" />
+        <env name="FTP_HOST" value="localhost" />
+        <env name="FTP_PORT" value="21" />
+        <env name="FTP_USER" value="hoge" />
+        <env name="FTP_PASS" value="piyo" />
+        <env name="FTP_BASE" value="/var/ftp/users/hoge/" />
+        <env name="INVALID_USER" value="abc" />
+        <env name="INVALID_PASS" value="xyz" />
+        <env name="REFUSE_PORT" value="1" />
+        <env name="NEVER_PORT" value="22" />
     --></php>
 
 </phpunit>
