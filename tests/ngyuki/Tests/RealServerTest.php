@@ -311,4 +311,73 @@ class RealServerTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $list);
         $this->assertNotEmpty($list['.abc']);
     }
+
+    /**
+     * @test
+     */
+    function rename_()
+    {
+        $ftp = $this->initFtpClient();
+
+        try
+        {
+            $data = uniqid();
+            $ftp->put("a.txt", $data);
+            $ftp->rename("a.txt", "b.txt");
+
+            $this->assertSame($data, $ftp->get("b.txt"));
+
+            $ftp->quit();
+        }
+        catch (RuntimeException $ex)
+        {
+            $ftp->close();
+            throw $ex;
+        }
+    }
+
+    /**
+     * @test
+     * @expectedException ngyuki\FtpClient\FtpException
+     * @expectedExceptionMessage rename(): RNFR command returned
+     */
+    function rename_err_rnfr()
+    {
+        $ftp = $this->initFtpClient();
+
+        try
+        {
+            $ftp->rename("x.txt", "b.txt");
+            $ftp->quit();
+        }
+        catch (RuntimeException $ex)
+        {
+            $ftp->close();
+            throw $ex;
+        }
+    }
+
+    /**
+     * @test
+     * @expectedException ngyuki\FtpClient\FtpException
+     * @expectedExceptionMessage rename(): RNTO command returned
+     */
+    function rename_err_rnto()
+    {
+        $ftp = $this->initFtpClient();
+
+        try
+        {
+            $data = uniqid();
+            $ftp->put("a.txt", $data);
+            $ftp->mkdir("b.txt");
+            $ftp->rename("a.txt", "b.txt");
+            $ftp->quit();
+        }
+        catch (RuntimeException $ex)
+        {
+            $ftp->close();
+            throw $ex;
+        }
+    }
 }

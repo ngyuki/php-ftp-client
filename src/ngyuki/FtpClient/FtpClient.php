@@ -634,6 +634,35 @@ class FtpClient
     }
 
     /**
+     * RNFR/RNTO コマンドを発行する
+     *
+     * @param string $src
+     * @param string $dst
+     *
+     * @throws FtpException
+     * @throws \RuntimeException
+     */
+    public function rename($src, $dst)
+    {
+        ASSERT(' is_string($src) && strlen($src) ');
+        ASSERT(' is_string($dst) && strlen($dst) ');
+
+        $resp = $this->_sendCommand("RNFR $src");
+
+        if ($resp->code != 350)
+        {
+            throw new FtpException("rename(): RNFR command returned \"$resp\"", $resp);
+        }
+
+        $resp = $this->_sendCommand("RNTO $dst");
+
+        if ($resp->code != 250)
+        {
+            throw new FtpException("rename(): RNTO command returned \"$resp\"", $resp);
+        }
+    }
+
+    /**
      * コマンドを送信して応答を受信する
      *
      * @param string $cmd
