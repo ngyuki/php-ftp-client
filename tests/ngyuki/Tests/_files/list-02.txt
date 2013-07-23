@@ -1,0 +1,8 @@
+drwxr-xr-x   3 hoge     hoge         4096 Jul 23 10:21 .
+drwxr-xr-x   3 hoge     hoge         4096 Jul 23 09:08 ..
+drwxr-xr-x   4 hoge     hoge         4096 Jul 23 10:21 html
+
+/pre/base/html:
+drwxr-xr-x   4 hoge     hoge         4096 Jul 23 10:21 .
+drwxr-xr-x   3 hoge     hoge         4096 Jul 23 10:21 ..
+-rw-r--r--   1 hoge     hoge            6 Jul 23 10:21 index.html

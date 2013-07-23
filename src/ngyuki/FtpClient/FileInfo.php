@@ -1,5 +1,5 @@
 <?php
-namespace ngyuki\FtpClient\FileInfo;
+namespace ngyuki\FtpClient;
 
 /**
  * @package   ngyuki\FtpClient
@@ -8,17 +8,22 @@ namespace ngyuki\FtpClient\FileInfo;
  * @license   http://www.opensource.org/licenses/mit-license.php  MIT License
  * @link      https://github.com/ngyuki/php-ftp-client
  */
-class File
+class FileInfo
 {
+    private $_type;
     private $_name;
     private $_size;
     private $_time;
 
-    public function __construct($name, $size, $time)
+    const FILE = 1;
+    const DIRECTORY = 2;
+
+    public function __construct($name, $size, $time, $type)
     {
         $this->_name = $name;
         $this->_size = $size;
         $this->_time = $time;
+        $this->_type = $type;
     }
 
     public function getName()
@@ -38,11 +43,11 @@ class File
 
     public function isDir()
     {
-        return false;
+        return $this->_type === self::DIRECTORY;
     }
 
     public function isFile()
     {
-        return true;
+        return $this->_type === self::FILE;
     }
 }

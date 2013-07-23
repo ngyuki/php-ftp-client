@@ -1,8 +1,7 @@
 <?php
 namespace ngyuki\FtpClient;
 
-use ngyuki\FtpClient\FileInfo\Directory;
-use ngyuki\FtpClient\FileInfo\File;
+use ngyuki\FtpClient\FileInfo;
 
 /**
  * @package   ngyuki\FtpClient
@@ -13,75 +12,60 @@ use ngyuki\FtpClient\FileInfo\File;
  */
 class ListParser
 {
-    public function parse($out)
+    public function parse($base, $out)
     {
         $list = explode("\n", $out);
 
-        return $this->parseByArray($list);
+        return $this->parseByArray($base, $list);
     }
 
-    public function parseByArray(array $list)
+    public function parseByArray($base, array $list)
     {
         $pat1 = '/(?:(d)|.)([rwxts-]{9})\s+(\w+)\s+([\w\d-()?.]+)\s+([\w\d-()?.]+)\s+(\w+)\s+(\S+\s+\S+\s+\S+)\s+(.+)/';
         $pat2 = '/^(.+):$/';
 
         $arr = new \ArrayObject();
 
-        $cwd = $arr;
+        if ($base === '.')
+        {
+            $base = "";
+        }
+
+        $base = rtrim($base, '/');
+
+        if (strlen($base) !== 0)
+        {
+            $base .= '/';
+        }
 
         foreach ($list as $line)
         {
             if (preg_match($pat1, $line, $mat))
             {
-                if ($cwd)
+                $type = $mat[1] === 'd' ? FileInfo::DIRECTORY : FileInfo::FILE;
+                $size = $mat[6];
+                $time = $mat[7];
+                $name = $mat[8];
+
+                $time = strtotime($time);
+
+                if (preg_match('/^\.+$/', $name))
                 {
-                    $is_dir = $mat[1] === 'd';
-                    $size = $mat[6];
-                    $time = $mat[7];
-                    $name = $mat[8];
-
-                    $time = strtotime($time);
-
-                    if (preg_match('/^\.+$/', $name))
-                    {
-                        continue;
-                    }
-
-                    if ($is_dir)
-                    {
-                        $file = new Directory($name, $size, $time);
-                    }
-                    else
-                    {
-                        $file = new File($name, $size, $time);
-                    }
-
-                    $cwd[$name] = $file;
+                    continue;
                 }
+
+                $name = $base . $name;
+
+                $arr[] = $file = new FileInfo($name, $size, $time, $type);
             }
             else if (preg_match($pat2, $line, $mat))
             {
-                $dirs = explode("/", $mat[1]);
+                $base = $mat[1];
+                $base = rtrim($base, '/');
 
-                $cwd = $arr;
-
-                foreach ($dirs as $dir)
+                if (strlen($base) !== 0)
                 {
-                    if (!$cwd->offsetExists($dir))
-                    {
-                        $cwd = null;
-                        break;
-                    }
-
-                    $dir = $cwd[$dir];
-
-                    if (!$dir instanceof Directory)
-                    {
-                        $cwd = null;
-                        break;
-                    }
-
-                    $cwd = $dir->getFiles();
+                    $base .= '/';
                 }
             }
         }

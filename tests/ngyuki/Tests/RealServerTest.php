@@ -282,13 +282,22 @@ class RealServerTest extends \PHPUnit_Framework_TestCase
 
         $list = $ftp->getList(".");
 
+        $list = array_values($list->getArrayCopy());
+        $keys = array_map(function ($file) { return $file->getName(); }, $list);
+        $list = array_combine($keys, $list);
+
         $this->assertCount(2, $list);
         $this->assertNotEmpty($list['.abc']);
         $this->assertNotEmpty($list['zxc']);
 
         $list = $ftp->getList("zxc");
+
+        $list = array_values($list->getArrayCopy());
+        $keys = array_map(function ($file) { return $file->getName(); }, $list);
+        $list = array_combine($keys, $list);
+
         $this->assertCount(1, $list);
-        $this->assertNotEmpty($list['123']);
+        $this->assertNotEmpty($list['zxc/123']);
     }
 
     /**
@@ -303,13 +312,22 @@ class RealServerTest extends \PHPUnit_Framework_TestCase
 
         $list = $ftp->getRecursiveList(".");
 
-        $this->assertCount(1, $list);
+        $list = array_values($list->getArrayCopy());
+        $keys = array_map(function ($file) { return $file->getName(); }, $list);
+        $list = array_combine($keys, $list);
+
+        $this->assertCount(2, $list);
         $this->assertNotEmpty($list['zxc']);
+        $this->assertNotEmpty($list['zxc/.abc']);
 
         $list = $ftp->getRecursiveList("zxc");
 
+        $list = array_values($list->getArrayCopy());
+        $keys = array_map(function ($file) { return $file->getName(); }, $list);
+        $list = array_combine($keys, $list);
+
         $this->assertCount(1, $list);
-        $this->assertNotEmpty($list['.abc']);
+        $this->assertNotEmpty($list['zxc/.abc']);
     }
 
     /**

@@ -460,7 +460,7 @@ class FtpClient
         $list = $this->_getlist(__FUNCTION__, 'LIST', $dir, 'A');
 
         $parser = new ListParser();
-        return $parser->parseByArray($list);
+        return $parser->parseByArray($dir, $list);
     }
 
     /**
@@ -478,7 +478,7 @@ class FtpClient
         $list = $this->_getlist(__FUNCTION__, 'LIST -R', $dir, 'A');
 
         $parser = new ListParser();
-        return $parser->parseByArray($list);
+        return $parser->parseByArray($dir, $list);
     }
 
     /**
