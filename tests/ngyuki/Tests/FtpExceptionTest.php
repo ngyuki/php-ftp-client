@@ -21,4 +21,26 @@ class FtpExceptionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame("xyz", $obj->getMessage());
         $this->assertSame($resp, $obj->getResponse());
     }
+
+    /**
+     * @test
+     */
+    public function fromString_()
+    {
+        $obj = FtpException::fromString("123 qwe");
+
+        $this->assertSame(123, $obj->getCode());
+        $this->assertSame("qwe", $obj->getMessage());
+        $this->assertInstanceOf('ngyuki\FtpClient\FtpResponse', $obj->getResponse());
+    }
+
+    /**
+     * @test
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage unable parse response string.
+     */
+    public function fromString_invalid()
+    {
+        $obj = FtpException::fromString("xxx");
+    }
 }

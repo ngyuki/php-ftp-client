@@ -26,6 +26,42 @@ class FtpResponse
     private $_mesg;
 
     /**
+     * 文字列からレスポンスオブジェクトを作成
+     *
+     * @return FtpResponse|null
+     */
+    public static function fromString($line)
+    {
+        ASSERT('is_string($line)');
+
+        $code = null;
+        $mesg = "";
+
+        $arr = explode(" ", $line, 2);
+
+        if (count($arr) < 2)
+        {
+            list ($code) = $arr;
+        }
+        else
+        {
+            list ($code, $mesg) = $arr;
+        }
+
+        if (strlen($code) !== 3)
+        {
+            return null;
+        }
+
+        if (ctype_digit($code) === false)
+        {
+            return null;
+        }
+
+        return new self((int)$code, (string)$mesg);
+    }
+
+    /**
      * コンストラクタ
      *
      * @param string $code

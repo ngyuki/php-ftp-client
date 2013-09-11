@@ -16,6 +16,23 @@ class FtpException extends \RuntimeException
     private $_response;
 
     /**
+     * 文字列から例外を作成
+     *
+     * @return FtpException
+     */
+    public static function fromString($line)
+    {
+        $response = FtpResponse::fromString($line);
+
+        if ($response === null)
+        {
+            throw new \InvalidArgumentException("unable parse response string.");
+        }
+
+        return new self($response->getMessage(), $response);
+    }
+
+    /**
      * コンストラクタ
      *
      * @param string $message
