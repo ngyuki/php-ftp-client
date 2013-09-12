@@ -1,8 +1,6 @@
 <?php
 namespace ngyuki\FtpClient;
 
-use RuntimeException;
-
 /**
  * @package   ngyuki\FtpClient
  * @copyright 2012 ngyuki <ngyuki.ts@gmail.com>
@@ -37,7 +35,7 @@ class TransportStream implements TransportInterface
      * @param int    $port
      * @param int    $timeout
      *
-     * @throws RuntimeException
+     * @throws TransportException
      */
     public function connect($host, $port, $timeout)
     {
@@ -57,11 +55,11 @@ class TransportStream implements TransportInterface
                 // @codeCoverageIgnoreStart
                 if ($errno === 0)
                 {
-                    throw new RuntimeException("stream_socket_client(): unknown error");
+                    throw new TransportException("stream_socket_client(): unknown error");
                 }
                 else
                 {
-                    throw new RuntimeException("stream_socket_client(): [$errno] $errstr");
+                    throw new TransportException("stream_socket_client(): [$errno] $errstr");
                 }
                 // @codeCoverageIgnoreEnd
             }
@@ -69,14 +67,14 @@ class TransportStream implements TransportInterface
             if (stream_set_blocking($stream, true) == false)
             {
                 // @codeCoverageIgnoreStart
-                throw new RuntimeException("stream_set_blocking(): unknown error");
+                throw new TransportException("stream_set_blocking(): unknown error");
                 // @codeCoverageIgnoreEnd
             }
 
             if (stream_set_timeout($stream, $timeout) == false)
             {
                 // @codeCoverageIgnoreStart
-                throw new RuntimeException("stream_set_timeout(): unknown error");
+                throw new TransportException("stream_set_timeout(): unknown error");
                 // @codeCoverageIgnoreEnd
             }
 
@@ -124,7 +122,7 @@ class TransportStream implements TransportInterface
     {
         if ($this->_eof)
         {
-            throw new RuntimeException("fgets(): end of stream");
+            throw new TransportException("fgets(): end of stream");
         }
 
         if (feof($this->_stream))
@@ -143,7 +141,7 @@ class TransportStream implements TransportInterface
             {
                 if (isset($meta['timed_out']) && $meta['timed_out'])
                 {
-                    throw new RuntimeException("fgets(): timeout");
+                    throw new TransportException("fgets(): timeout");
                 }
 
                 if (isset($meta['eof']) && $meta['eof'])
@@ -153,7 +151,7 @@ class TransportStream implements TransportInterface
                 }
             }
 
-            throw new RuntimeException("fgets(): unknown error");
+            throw new TransportException("fgets(): unknown error");
         }
 
         return $recv;
@@ -164,7 +162,7 @@ class TransportStream implements TransportInterface
      *
      * @return string
      *
-     * @throws RuntimeException
+     * @throws TransportException
      */
     public function recvall()
     {
@@ -210,7 +208,7 @@ class TransportStream implements TransportInterface
      *
      * @return string
      *
-     * @throws RuntimeException
+     * @throws TransportException
      */
     public function recvline()
     {
@@ -256,7 +254,7 @@ class TransportStream implements TransportInterface
      *
      * @param string $data
      *
-     * @throws RuntimeException
+     * @throws TransportException
      */
     public function send($data)
     {
@@ -277,7 +275,7 @@ class TransportStream implements TransportInterface
                 if ($n == 0)
                 {
                     // @codeCoverageIgnoreStart
-                    throw new RuntimeException("fwrite(): unknown error");
+                    throw new TransportException("fwrite(): unknown error");
                     // @codeCoverageIgnoreEnd
                 }
 

@@ -52,7 +52,7 @@ class ErrorHandler
     {
         // 5.4 で $this を束縛しないように
         return function($errno, $errstr) {
-            throw new \RuntimeException($errstr, $errno);
+            throw new TransportException($errstr, $errno);
             //throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
         };
     }

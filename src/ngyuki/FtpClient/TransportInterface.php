@@ -17,7 +17,7 @@ interface TransportInterface
      * @param int    $port
      * @param int    $timeout
      *
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function connect($host, $port, $timeout);
 
@@ -39,7 +39,7 @@ interface TransportInterface
      *
      * @return string
      *
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function recvall();
 
@@ -48,7 +48,7 @@ interface TransportInterface
      *
      * @return string
      *
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function recvline();
 
@@ -57,7 +57,7 @@ interface TransportInterface
      *
      * @param string $data
      *
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function send($data);
 }

@@ -196,7 +196,6 @@ class RealServerTest extends \PHPUnit_Framework_TestCase
         }
         catch (RuntimeException $ex)
         {
-            $this->assertSame('RuntimeException', get_class($ex));
             $this->assertContains("Connection refused", $ex->getMessage());
         }
     }
@@ -224,7 +223,6 @@ class RealServerTest extends \PHPUnit_Framework_TestCase
         }
         catch (RuntimeException $ex)
         {
-            $this->assertSame('RuntimeException', get_class($ex));
             $this->assertContains("fgets(): timeout", $ex->getMessage());
         }
     }

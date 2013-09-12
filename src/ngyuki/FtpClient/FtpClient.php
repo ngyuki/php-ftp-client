@@ -63,7 +63,7 @@ class FtpClient
      * @param int    $timeout
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function connect($host, $port, $timeout)
     {
@@ -100,7 +100,7 @@ class FtpClient
     /**
      * 接続を強制的に閉じる
      *
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function close()
     {
@@ -136,7 +136,7 @@ class FtpClient
      * QUIT コマンドを発行して接続を閉じる
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function quit()
     {
@@ -174,7 +174,7 @@ class FtpClient
      * @param string $pass
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function login($user, $pass)
     {
@@ -206,7 +206,7 @@ class FtpClient
      * @return TransportInterface
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     private function _connectPassiveTransport($type)
     {
@@ -288,7 +288,7 @@ class FtpClient
      * @return string
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function get($fn)
     {
@@ -302,7 +302,7 @@ class FtpClient
      * @param string $data
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function put($fn, $data)
     {
@@ -347,7 +347,7 @@ class FtpClient
      * @return string
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function _getdata($func, $cmd, $arg, $type)
     {
@@ -399,7 +399,7 @@ class FtpClient
      * @param string $arg	引数
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function _getlist($func, $cmd, $arg)
     {
@@ -423,7 +423,7 @@ class FtpClient
      * @return array
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function rawlist($dir)
     {
@@ -438,7 +438,7 @@ class FtpClient
      * @return array
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function nlist($dir)
     {
@@ -453,7 +453,7 @@ class FtpClient
      * @return \ArrayObject
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function getList($dir)
     {
@@ -471,7 +471,7 @@ class FtpClient
      * @return \ArrayObject
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function getRecursiveList($dir)
     {
@@ -487,7 +487,7 @@ class FtpClient
      * @return string
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function pwd()
     {
@@ -512,7 +512,7 @@ class FtpClient
      * @param string $dir
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function chdir($dir)
     {
@@ -532,7 +532,7 @@ class FtpClient
      * @return string
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function mkdir($dir)
     {
@@ -557,7 +557,7 @@ class FtpClient
      * @param string $dir
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function rmdir($dir)
     {
@@ -576,7 +576,7 @@ class FtpClient
      * @param int    $mode
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function chmod($fn, $mode)
     {
@@ -599,7 +599,7 @@ class FtpClient
      * @param string $fn
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function delete($fn)
     {
@@ -619,7 +619,7 @@ class FtpClient
      * @param string $cmd
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function site($cmd)
     {
@@ -640,7 +640,7 @@ class FtpClient
      * @param string $dst
      *
      * @throws FtpException
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     public function rename($src, $dst)
     {
@@ -667,7 +667,7 @@ class FtpClient
      *
      * @param string $cmd
      *
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     private function _sendCommand($cmd)
     {
@@ -680,7 +680,7 @@ class FtpClient
      *
      * @return FtpResponse
      *
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     private function _recvResponse()
     {

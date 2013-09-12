@@ -1,8 +1,6 @@
 <?php
 namespace ngyuki\FtpClient;
 
-use RuntimeException;
-
 /**
  * @package   ngyuki\FtpClient
  * @copyright 2012 ngyuki <ngyuki.ts@gmail.com>
@@ -35,7 +33,7 @@ class TransportSocket implements TransportInterface
      *
      * @param string $func
      * @param resource $socket
-     * @throws \RuntimeException
+     * @throws TransportException
      */
     private static function raiseSocketException($func, $socket = null)
     {
@@ -50,12 +48,12 @@ class TransportSocket implements TransportInterface
 
         if ($errno == 0)
         {
-            throw new RuntimeException("$func(): unknown error");
+            throw new TransportException("$func(): unknown error");
         }
         else
         {
             $errstr = socket_strerror($errno);
-            throw new RuntimeException("$func(): [$errno] $errstr");
+            throw new TransportException("$func(): [$errno] $errstr");
         }
     }
 
@@ -66,7 +64,7 @@ class TransportSocket implements TransportInterface
      * @param int    $port
      * @param int    $timeout
      *
-     * @throws RuntimeException
+     * @throws TransportException
      */
     public function connect($host, $port, $timeout)
     {
@@ -147,7 +145,7 @@ class TransportSocket implements TransportInterface
      *
      * @return string
      *
-     * @throws RuntimeException
+     * @throws TransportException
      */
     public function recvall()
     {
@@ -181,7 +179,7 @@ class TransportSocket implements TransportInterface
      *
      * @return string
      *
-     * @throws RuntimeException
+     * @throws TransportException
      */
     public function recvline()
     {
@@ -234,7 +232,7 @@ class TransportSocket implements TransportInterface
      *
      * @param string $data
      *
-     * @throws RuntimeException
+     * @throws TransportException
      */
     public function send($data)
     {
