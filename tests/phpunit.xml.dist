@@ -8,13 +8,11 @@
             <directory>./</directory>
         </testsuite>
     </testsuites>
-    
     <filter>
         <whitelist>
             <directory suffix=".php">../src/</directory>
         </whitelist>
     </filter>
-
     <php><!--
         <env name="FTP_HOST" value="localhost" />
         <env name="FTP_PORT" value="21" />
@@ -26,5 +24,4 @@
         <env name="REFUSE_PORT" value="1" />
         <env name="NEVER_PORT" value="22" />
     --></php>
-
 </phpunit>

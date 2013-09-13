@@ -1,5 +1,5 @@
 <?php
-namespace ngyuki\Tests;
+namespace Tests;
 
 use ngyuki\FtpClient\FtpClient;
 

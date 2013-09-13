@@ -1,7 +1,7 @@
 <?php
-namespace ngyuki\Tests;
+namespace Tests;
 
-use ngyuki\FtpClient\TransportSocket;
+use ngyuki\FtpClient\TransportStream;
 use RuntimeException;
 
 /**
@@ -9,11 +9,11 @@ use RuntimeException;
  * @group posix
  * @requires function pcntl_fork
  */
-class TransportSocketTest extends \PHPUnit_Framework_TestCase
+class TransportStreamTest extends \PHPUnit_Framework_TestCase
 {
     protected function createTransport()
     {
-        return new TransportSocket();
+        return new TransportStream();
     }
 
     /**
@@ -71,6 +71,8 @@ class TransportSocketTest extends \PHPUnit_Framework_TestCase
      */
     public function connect_refused()
     {
+        // 接続が拒否された場合（開いていないポートへ接続）
+
         $transport = $this->createTransport();
 
         $time = microtime(true);
@@ -94,6 +96,8 @@ class TransportSocketTest extends \PHPUnit_Framework_TestCase
      */
     public function connect_timeout()
     {
+        // 接続がタイムアウトした場合（存在しないIPアドレスへ接続）
+
         $transport = $this->createTransport();
 
         $time = microtime(true);
@@ -108,7 +112,7 @@ class TransportSocketTest extends \PHPUnit_Framework_TestCase
             $this->assertLessThan(2.1, microtime(true) - $time);
             $this->assertGreaterThan(1.9, microtime(true) - $time);
             $this->assertContains("connect", $ex->getMessage());
-            $this->assertContains("Operation now in progress", $ex->getMessage());
+            $this->assertContains("Connection timed out", $ex->getMessage());
         }
     }
 
@@ -140,6 +144,8 @@ class TransportSocketTest extends \PHPUnit_Framework_TestCase
      */
     public function recvall_timeout()
     {
+        // サーバが応答を返さずにタイムアウトした場合
+
         $server = new DummyServer();
         $server->run(11111, function ($stream) {
             sleep(10);
@@ -159,8 +165,68 @@ class TransportSocketTest extends \PHPUnit_Framework_TestCase
         {
             $this->assertLessThan(2.1, microtime(true) - $time);
             $this->assertGreaterThan(1.9, microtime(true) - $time);
-            $this->assertContains("socket_recv()", $ex->getMessage());
+            $this->assertContains("fgets(): timeout", $ex->getMessage());
         }
+    }
+
+    /**
+     * @test
+     * @group longtime
+     */
+    public function recvall_shutdown()
+    {
+        // サーバがソケットをシャットダウンした場合
+
+        $server = new DummyServer();
+        $server->run(11111, function ($stream) {
+            stream_socket_shutdown($stream, STREAM_SHUT_RDWR);
+        });
+
+        $transport = $this->createTransport();
+        $transport->connect('127.0.0.1', 11111, 2);
+
+        $time = microtime(true);
+
+        $recv = $transport->recvall();
+        $this->assertSame("", $recv);
+
+        $time = microtime(true);
+
+        try
+        {
+            $transport->recvall();
+            $this->fail();
+        }
+        catch (RuntimeException $ex)
+        {
+            $this->assertLessThan(0.1, microtime(true) - $time);
+            $this->assertContains("fgets(): end of stream", $ex->getMessage());
+        }
+    }
+
+    /**
+     * @test
+     * @group longtime
+     * @group one
+     */
+    public function recvall_bigdata()
+    {
+        // 1 回の fgets では受信しきれない大きいデータ
+
+        $data = str_repeat("x", 1024*100);
+
+        $server = new DummyServer();
+        $server->run(11111, function ($stream) use ($data) {
+            fputs($stream, $data);
+        });
+
+        $transport = $this->createTransport();
+        $transport->connect('127.0.0.1', 11111, 2);
+
+        $time = microtime(true);
+
+        $recv = $transport->recvall();
+        $this->assertSame($data, $recv);
     }
 
     /**
@@ -169,6 +235,8 @@ class TransportSocketTest extends \PHPUnit_Framework_TestCase
      */
     public function recvline_timeout()
     {
+        // サーバが応答を返さずにタイムアウトした場合
+
         $server = new DummyServer();
         $server->run(11111, function ($stream) {
             sleep(10);
@@ -188,7 +256,76 @@ class TransportSocketTest extends \PHPUnit_Framework_TestCase
         {
             $this->assertLessThan(2.1, microtime(true) - $time);
             $this->assertGreaterThan(1.9, microtime(true) - $time);
-            $this->assertContains("socket_recv()", $ex->getMessage());
+            $this->assertContains("fgets(): timeout", $ex->getMessage());
+        }
+    }
+
+    /**
+     * @test
+     * @group longtime
+     */
+    public function recvline_shutdown()
+    {
+        // サーバがソケットをシャットダウンした場合
+
+        $server = new DummyServer();
+        $server->run(11111, function ($stream) {
+            stream_socket_shutdown($stream, STREAM_SHUT_RDWR);
+        });
+
+        $transport = $this->createTransport();
+        $transport->connect('127.0.0.1', 11111, 2);
+
+        $recv = $transport->recvline();
+        $this->assertSame("", $recv);
+
+        $time = microtime(true);
+
+        try
+        {
+            $transport->recvline();
+            $this->fail();
+        }
+        catch (RuntimeException $ex)
+        {
+            $this->assertLessThan(0.1, microtime(true) - $time);
+            $this->assertContains("fgets(): end of stream", $ex->getMessage());
+        }
+    }
+
+    /**
+     * @test
+     * @group longtime
+     */
+    public function recvline_bigdata()
+    {
+        // 1 回の fgets では受信しきれない大きいデータ
+
+        $data = str_repeat("x", 1024*100);
+
+        $server = new DummyServer();
+        $server->run(11111, function ($stream) use ($data) {
+            fputs($stream, $data);
+        });
+
+        $transport = $this->createTransport();
+        $transport->connect('127.0.0.1', 11111, 2);
+
+        $recv = $transport->recvline();
+        $this->assertSame($data, $recv);
+
+        $time = microtime(true);
+
+        try
+        {
+            $transport->recvline();
+        }
+        catch (RuntimeException $ex)
+        {
+            // EOF に達しているため例外になるが呼び出し元にEOFを判断するすべがない・・・
+            //   → 呼び出し元は EOF では無いはずだと思っているわけなので例外のままで構わないとする
+            $this->assertLessThan(0.1, microtime(true) - $time);
+            $this->assertContains("fgets(): end of stream", $ex->getMessage());
         }
     }
 
@@ -216,7 +353,7 @@ class TransportSocketTest extends \PHPUnit_Framework_TestCase
         }
         catch (RuntimeException $ex)
         {
-            $this->assertContains("socket_send()", $ex->getMessage());
+            $this->assertContains("fwrite()", $ex->getMessage());
         }
     }
 }
