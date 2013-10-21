@@ -28,21 +28,10 @@ before_install:
 
 before_script:
   - composer install
-
-env:
-  - FTP_HOST=127.0.0.1
-    FTP_PORT=10021
-    FTP_USER=hoge
-    FTP_PASS=pass
-    FTP_BASE=/tmp/ftp
-    INVALID_USER=xxx
-    INVALID_PASS=uso
-    REFUSE_PORT=1
-    NEVER_PORT=22
+  - mkdir -p build/logs
 
 script:
-  - mkdir -p build/logs
-  - phpunit -c tests/ --colors --coverage-text --coverage-clover build/logs/clover.xml
+  - phpunit -c tests/phpunit.travis.xml --colors --coverage-text --coverage-clover build/logs/clover.xml
 
 after_script:
   - vendor/bin/coveralls -c tests/coveralls.yml -v

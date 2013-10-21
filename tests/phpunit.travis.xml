@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://raw.github.com/sebastianbergmann/phpunit/master/phpunit.xsd"
+    bootstrap="./bootstrap.php"
+>
+    <testsuites>
+        <testsuite name="tests">
+            <directory>./</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">../src/</directory>
+        </whitelist>
+    </filter>
+    <php>
+        <env name="FTP_HOST" value="127.0.0.1" />
+        <env name="FTP_PORT" value="10021" />
+        <env name="FTP_USER" value="hoge" />
+        <env name="FTP_PASS" value="pass" />
+        <env name="FTP_BASE" value="/tmp/ftp" />
+        <env name="INVALID_USER" value="xxx" />
+        <env name="INVALID_PASS" value="uso" />
+        <env name="REFUSE_PORT" value="1" />
+        <env name="NEVER_PORT" value="22" />
+    </php>
+</phpunit>
