@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/ngyuki/php-ftp-client.png)](https://travis-ci.org/ngyuki/php-ftp-client)
+[![Coverage Status](https://coveralls.io/repos/ngyuki/php-ftp-client/badge.png?branch=next)](https://coveralls.io/r/ngyuki/php-ftp-client?branch=next)
 
 概要
 -----
