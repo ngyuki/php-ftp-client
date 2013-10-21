@@ -41,7 +41,11 @@ env:
     NEVER_PORT=22
 
 script:
-  - phpunit -c tests/ --colors --coverage-text
+  - mkdir -p build/logs
+  - phpunit -c tests/ --colors --coverage-text --coverage-clover build/logs/clover.xml
+
+after_script:
+  - vendor/bin/coveralls -c tests/coveralls.yml -v
 
 branches:
   except:

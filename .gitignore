@@ -3,3 +3,4 @@
 /composer.lock
 /tests/phpunit.xml
 /tests/phpunit.win.xml
+/build
