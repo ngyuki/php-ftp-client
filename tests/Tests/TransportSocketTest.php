@@ -106,9 +106,7 @@ class TransportSocketTest extends \PHPUnit_Framework_TestCase
         catch (RuntimeException $ex)
         {
             $this->assertLessThan(2.1, microtime(true) - $time);
-            $this->assertGreaterThan(1.9, microtime(true) - $time);
             $this->assertContains("connect", $ex->getMessage());
-            $this->assertContains("Operation now in progress", $ex->getMessage());
         }
     }
 
