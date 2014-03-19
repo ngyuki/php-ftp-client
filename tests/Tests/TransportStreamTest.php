@@ -104,7 +104,7 @@ class TransportStreamTest extends \PHPUnit_Framework_TestCase
 
         try
         {
-            $transport->connect('192.2.0.123', 11111, 2);
+            $transport->connect('192.0.2.123', 11111, 2);
             $this->fail();
         }
         catch (RuntimeException $ex)

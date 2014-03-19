@@ -47,13 +47,13 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
      */
     function connect()
     {
-        $this->control->setListen("192.2.0.123", 12345);
+        $this->control->setListen("192.0.2.123", 12345);
         $this->control->addRecvline("220 connected");
 
         $this->assertFalse($this->control->connected());
         $this->assertFalse($this->transfer->connected());
 
-        $this->ftp->connect("192.2.0.123", 12345, 5);
+        $this->ftp->connect("192.0.2.123", 12345, 5);
 
         $this->assertTrue($this->control->connected());
         $this->assertFalse($this->transfer->connected());
@@ -64,12 +64,12 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
      */
     function connect_error_invalid_respcode()
     {
-        $this->control->setListen("192.2.0.123", 12345);
+        $this->control->setListen("192.0.2.123", 12345);
         $this->control->addRecvline("954 xxx");
 
         try
         {
-            $this->ftp->connect("192.2.0.123", 12345, 5);
+            $this->ftp->connect("192.0.2.123", 12345, 5);
         }
         catch (FtpException $ex)
         {
@@ -86,12 +86,12 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
      */
     function connect_error_nodigit_respcode()
     {
-        $this->control->setListen("192.2.0.123", 12345);
+        $this->control->setListen("192.0.2.123", 12345);
         $this->control->addRecvline("ABC xxx");
 
         try
         {
-            $this->ftp->connect("192.2.0.123", 12345, 5);
+            $this->ftp->connect("192.0.2.123", 12345, 5);
         }
         catch (\RuntimeException $ex)
         {
@@ -108,11 +108,11 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
      */
     function connect_error_invalid_host()
     {
-        $this->control->setListen("192.2.0.123", 12345);
+        $this->control->setListen("192.0.2.123", 12345);
 
         try
         {
-            $this->ftp->connect("192.2.0.124", 12346, 5);
+            $this->ftp->connect("192.0.2.124", 12346, 5);
             $this->fail();
         }
         catch (\RuntimeException $ex)
@@ -130,10 +130,10 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
      */
     function close()
     {
-        $this->control->setListen("192.2.0.123", 12345);
+        $this->control->setListen("192.0.2.123", 12345);
         $this->control->addRecvline("220 connected");
-        $this->ftp->connect("192.2.0.123", 12345, 5);
-        $this->transfer->connect("192.2.0.123", 12345, 5);
+        $this->ftp->connect("192.0.2.123", 12345, 5);
+        $this->transfer->connect("192.0.2.123", 12345, 5);
 
         $this->assertTrue($this->control->connected());
         $this->assertTrue($this->transfer->connected());
@@ -145,10 +145,10 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
 
         /// $control の切断で例外
 
-        $this->control->setListen("192.2.0.123", 12345);
+        $this->control->setListen("192.0.2.123", 12345);
         $this->control->addRecvline("220 connected");
-        $this->ftp->connect("192.2.0.123", 12345, 5);
-        $this->transfer->connect("192.2.0.123", 12345, 5);
+        $this->ftp->connect("192.0.2.123", 12345, 5);
+        $this->transfer->connect("192.0.2.123", 12345, 5);
 
         $this->control->onClose(function () {
             throw new \RuntimeException("asda405das2d4");
@@ -171,10 +171,10 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
 
         /// $transfer の切断で例外
 
-        $this->control->setListen("192.2.0.123", 12345);
+        $this->control->setListen("192.0.2.123", 12345);
         $this->control->addRecvline("220 connected");
-        $this->ftp->connect("192.2.0.123", 12345, 5);
-        $this->transfer->connect("192.2.0.123", 12345, 5);
+        $this->ftp->connect("192.0.2.123", 12345, 5);
+        $this->transfer->connect("192.0.2.123", 12345, 5);
 
         $this->transfer->onClose(function () {
             throw new \RuntimeException("gerh8884as0ra");
@@ -198,10 +198,10 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
 
         /// $control と $transfer の切断で例外
 
-        $this->control->setListen("192.2.0.123", 12345);
+        $this->control->setListen("192.0.2.123", 12345);
         $this->control->addRecvline("220 connected");
-        $this->ftp->connect("192.2.0.123", 12345, 5);
-        $this->transfer->connect("192.2.0.123", 12345, 5);
+        $this->ftp->connect("192.0.2.123", 12345, 5);
+        $this->transfer->connect("192.0.2.123", 12345, 5);
 
         $this->control->onClose(function () {
             throw new \RuntimeException("asda405das2d4");
@@ -231,9 +231,9 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
      */
     function quit()
     {
-        $this->control->setListen("192.2.0.123", 12345);
+        $this->control->setListen("192.0.2.123", 12345);
         $this->control->addRecvline("220 connected");
-        $this->ftp->connect("192.2.0.123", 12345, 5);
+        $this->ftp->connect("192.0.2.123", 12345, 5);
 
         $this->control->addPattern("/^QUIT\s*$/", "221 bye");
         $this->ftp->quit();
@@ -249,9 +249,9 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
     {
         // 応答コードが異なる
 
-        $this->control->setListen("192.2.0.123", 12345);
+        $this->control->setListen("192.0.2.123", 12345);
         $this->control->addRecvline("220 connected");
-        $this->ftp->connect("192.2.0.123", 12345, 5);
+        $this->ftp->connect("192.0.2.123", 12345, 5);
 
         $this->control->addPattern("/^QUIT\s*$/", "789");
 
@@ -265,9 +265,9 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
      */
     function quit_error_noresp()
     {
-        $this->control->setListen("192.2.0.123", 12345);
+        $this->control->setListen("192.0.2.123", 12345);
         $this->control->addRecvline("220 connected");
-        $this->ftp->connect("192.2.0.123", 12345, 5);
+        $this->ftp->connect("192.0.2.123", 12345, 5);
 
         $this->control->addPattern("/^QUIT\s*$/", null);
 
@@ -281,9 +281,9 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
      */
     function quit_error_senderror()
     {
-        $this->control->setListen("192.2.0.123", 12345);
+        $this->control->setListen("192.0.2.123", 12345);
         $this->control->addRecvline("220 connected");
-        $this->ftp->connect("192.2.0.123", 12345, 5);
+        $this->ftp->connect("192.0.2.123", 12345, 5);
 
         $this->ftp->quit();
     }
@@ -312,10 +312,10 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
         $this->control->clear();
         $this->transfer->clear();
 
-        $this->control->setListen("192.2.0.123", 12345);
+        $this->control->setListen("192.0.2.123", 12345);
         $this->control->addRecvline("220 connected");
 
-        $this->ftp->connect("192.2.0.123", 12345, 5);
+        $this->ftp->connect("192.0.2.123", 12345, 5);
     }
 
     /**
@@ -418,7 +418,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
 
         $this->prepareConnection();
 
-        $control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $control->addPattern("/^TYPE I\s*$/", "200");
         $control->addPattern("/^RETR hoge.txt\s*$/", "150");
 
@@ -427,7 +427,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
         $obj->no = 0;
 
         $transfer->onConnect(function($host, $port, $timeout) use ($self, $obj) {
-            $self->assertEquals($host, "192.2.0.124");
+            $self->assertEquals($host, "192.0.2.124");
             $self->assertEquals($port, 12346);
             $obj->connect = ++$obj->no;
         });
@@ -465,7 +465,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
         /// command invalid respcode
         $this->prepareConnection();
 
-        $control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $control->addPattern("/^TYPE I\s*$/", "200");
         $control->addPattern("/^RETR hoge.txt\s*$/", "958");
 
@@ -485,7 +485,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
         /// command noresp
         $this->prepareConnection();
 
-        $control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $control->addPattern("/^TYPE I\s*$/", "200");
         $control->addPattern("/^RETR hoge.txt\s*$/", null);
 
@@ -508,7 +508,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
         $control = $this->control;
         $transfer = $this->transfer;
 
-        $control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $control->addPattern("/^TYPE I\s*$/", "200");
         $control->addPattern("/^RETR hoge.txt\s*$/", "150");
 
@@ -532,7 +532,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
         /// transfer invalid respcode
         $this->prepareConnection();
 
-        $control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $control->addPattern("/^TYPE I\s*$/", "200");
         $control->addPattern("/^RETR hoge.txt\s*$/", "150");
 
@@ -556,7 +556,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
         /// transfer noresp
         $this->prepareConnection();
 
-        $control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $control->addPattern("/^TYPE I\s*$/", "200");
         $control->addPattern("/^RETR hoge.txt\s*$/", "150");
 
@@ -583,7 +583,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
         $control = $this->control;
         $transfer = $this->transfer;
 
-        $control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $control->addPattern("/^TYPE I\s*$/", "200 Type set to I");
         $control->addPattern("/^STOR hoge.txt\s*$/", "150 Content Scanning Enabled - please wait.");
 
@@ -592,7 +592,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
         $obj->no = 0;
 
         $transfer->onConnect(function($host, $port, $timeout) use ($self, $obj) {
-            $self->assertEquals($host, "192.2.0.124");
+            $self->assertEquals($host, "192.0.2.124");
             $self->assertEquals($port, 12346);
             $obj->connect = ++$obj->no;
         });
@@ -626,7 +626,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
         $control = $this->control;
         $transfer = $this->transfer;
 
-        $control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $control->addPattern("/^TYPE I\s*$/", "200 Type set to I");
         $control->addPattern("/^STOR hoge.txt\s*$/", "150 Content Scanning Enabled - please wait.");
 
@@ -635,7 +635,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
         $obj->no = 0;
 
         $transfer->onConnect(function ($host, $port, $timeout) use ($self, $obj) {
-            $self->assertEquals($host, "192.2.0.124");
+            $self->assertEquals($host, "192.0.2.124");
             $self->assertEquals($port, 12346);
             $obj->connect = ++$obj->no;
         });
@@ -670,7 +670,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareConnection();
 
-        $this->control->addPattern("/^PASV\s*$/", "400 (192,2,0,124,48,58)");
+        $this->control->addPattern("/^PASV\s*$/", "400 (192,0,2,124,48,58)");
 
         try
         {
@@ -712,7 +712,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareConnection();
 
-        $this->control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48)");
+        $this->control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48)");
 
         try
         {
@@ -754,7 +754,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareConnection();
 
-        $this->control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $this->control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $this->control->addPattern("/^TYPE I\s*$/", "951");
 
         try
@@ -776,7 +776,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareConnection();
 
-        $this->control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $this->control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $this->control->addPattern("/^TYPE I\s*$/", null);
 
         try
@@ -800,7 +800,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareConnection();
 
-        $this->control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $this->control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $this->control->addPattern("/^TYPE I\s*$/", "200");
         $this->control->addPattern("/^STOR hoge.txt\s*$/", "945");
 
@@ -823,7 +823,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareConnection();
 
-        $this->control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $this->control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $this->control->addPattern("/^TYPE I\s*$/", "200");
         $this->control->addPattern("/^STOR hoge.txt\s*$/", null);
 
@@ -846,7 +846,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareConnection();
 
-        $this->control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $this->control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $this->control->addPattern("/^TYPE I\s*$/", "200");
         $this->control->addPattern("/^STOR hoge.txt\s*$/", "150");
 
@@ -876,7 +876,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
         $this->prepareConnection();
         $control = $this->control;
 
-        $this->control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $this->control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $this->control->addPattern("/^TYPE I\s*$/", "200");
         $this->control->addPattern("/^STOR hoge.txt\s*$/", "150");
 
@@ -905,7 +905,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
     {
         $this->prepareConnection();
 
-        $this->control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $this->control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $this->control->addPattern("/^TYPE I\s*$/", "200");
         $this->control->addPattern("/^STOR hoge.txt\s*$/", "150");
 
@@ -932,7 +932,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
         $control = $this->control;
         $transfer = $this->transfer;
 
-        $this->control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $this->control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $this->control->addPattern("/^TYPE A\s*$/", "200");
         $this->control->addPattern("/^LIST zzz\s*$/", "150");
 
@@ -941,7 +941,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
         $obj->no = 0;
 
         $this->transfer->onConnect(function($host, $port, $timeout) use ($self, $obj) {
-            $self->assertEquals($host, "192.2.0.124");
+            $self->assertEquals($host, "192.0.2.124");
             $self->assertEquals($port, 12346);
             $obj->connect = ++$obj->no;
         });
@@ -977,7 +977,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
         $control = $this->control;
         $transfer = $this->transfer;
 
-        $this->control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $this->control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $this->control->addPattern("/^TYPE A\s*$/", "200");
         $this->control->addPattern("/^NLST zzz\s*$/", "150");
 
@@ -986,7 +986,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
         $obj->no = 0;
 
         $this->transfer->onConnect(function($host, $port, $timeout) use ($self, $obj) {
-            $self->assertEquals($host, "192.2.0.124");
+            $self->assertEquals($host, "192.0.2.124");
             $self->assertEquals($port, 12346);
             $obj->connect = ++$obj->no;
         });
@@ -1023,7 +1023,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
 
         /// empty list
         $this->prepareConnection();
-        $control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $control->addPattern("/^TYPE A\s*$/", "200");
         $control->addPattern("/^LIST zzz\s*$/", "226");
 
@@ -1032,7 +1032,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
 
         /// command returned invalid respcode
         $this->prepareConnection();
-        $control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $control->addPattern("/^TYPE A\s*$/", "200");
         $control->addPattern("/^LIST zzz\s*$/", "964");
 
@@ -1051,7 +1051,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
 
         /// command returned noresp
         $this->prepareConnection();
-        $control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $control->addPattern("/^TYPE A\s*$/", "200");
         $control->addPattern("/^LIST zzz\s*$/", null);
 
@@ -1070,7 +1070,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
 
         /// transfer recv error
         $this->prepareConnection();
-        $control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $control->addPattern("/^TYPE A\s*$/", "200");
         $control->addPattern("/^LIST zzz\s*$/", "150");
 
@@ -1093,7 +1093,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
 
         /// transfer returned invalid respcode
         $this->prepareConnection();
-        $control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $control->addPattern("/^TYPE A\s*$/", "200");
         $control->addPattern("/^LIST zzz\s*$/", "150");
 
@@ -1120,7 +1120,7 @@ class FtpClientTest extends \PHPUnit_Framework_TestCase
 
         /// transfer returned noresp
         $this->prepareConnection();
-        $control->addPattern("/^PASV\s*$/", "227 (192,2,0,124,48,58)");
+        $control->addPattern("/^PASV\s*$/", "227 (192,0,2,124,48,58)");
         $control->addPattern("/^TYPE A\s*$/", "200");
         $control->addPattern("/^LIST zzz\s*$/", "150");
 
