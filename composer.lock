@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "fe89007b8372c3569f244a8133b373d2",
+    "content-hash": "29721a28239a6688f2811a792a9320be",
     "packages": [],
     "packages-dev": [
         {
@@ -286,6 +286,44 @@
                 "object graph"
             ],
             "time": "2017-10-19T19:58:43+00:00"
+        },
+        {
+            "name": "ngyuki/phpunit-functions",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ngyuki/phpunit-functions.git",
+                "reference": "367fe20aea7ea8a871c8e1ecdb3c85d55467bc23"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ngyuki/phpunit-functions/zipball/367fe20aea7ea8a871c8e1ecdb3c85d55467bc23",
+                "reference": "367fe20aea7ea8a871c8e1ecdb3c85d55467bc23",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Toshiyuki Goto",
+                    "email": "ngyuki.jp@gmail.com"
+                }
+            ],
+            "description": "PHPUnit Functions.php auto loader",
+            "homepage": "https://github.com/ngyuki/phpunit-functions",
+            "keywords": [
+                "phpunit",
+                "testing"
+            ],
+            "time": "2017-07-27T05:18:52+00:00"
         },
         {
             "name": "phar-io/manifest",

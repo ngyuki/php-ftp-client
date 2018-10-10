@@ -17,6 +17,7 @@
         }
     },
     "require-dev": {
+        "ngyuki/phpunit-functions": "^1.0",
         "php-coveralls/php-coveralls": "^2.1",
         "phpunit/phpunit": "^6.5"
     },
