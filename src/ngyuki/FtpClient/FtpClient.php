@@ -580,8 +580,8 @@ class FtpClient
      */
     public function chmod($fn, $mode)
     {
-        ASSERT(' is_string($fn) && strlen($fn) ');
-        ASSERT(' is_int($mode) ');
+        assert(is_string($fn) && strlen($fn));
+        assert(is_int($mode));
 
         $mode = sprintf("%o", $mode);
 
@@ -603,7 +603,7 @@ class FtpClient
      */
     public function delete($fn)
     {
-        ASSERT(' is_string($fn) && strlen($fn) ');
+        assert(is_string($fn) && strlen($fn));
 
         $resp = $this->_sendCommand("DELE $fn");
 
@@ -623,7 +623,7 @@ class FtpClient
      */
     public function site($cmd)
     {
-        ASSERT(' is_string($cmd) && strlen($cmd) ');
+        assert(is_string($cmd) && strlen($cmd));
 
         $resp = $this->_sendCommand("SITE $cmd");
 
@@ -644,8 +644,8 @@ class FtpClient
      */
     public function rename($src, $dst)
     {
-        ASSERT(' is_string($src) && strlen($src) ');
-        ASSERT(' is_string($dst) && strlen($dst) ');
+        assert(is_string($src) && strlen($src));
+        assert(is_string($dst) && strlen($dst));
 
         $resp = $this->_sendCommand("RNFR $src");
 

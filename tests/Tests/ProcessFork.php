@@ -30,7 +30,7 @@ class ProcessFork
      */
     public function fork($action)
     {
-        ASSERT('$this->_pid === null');
+        assert($this->_pid === null);
 
         $pid = pcntl_fork();
 

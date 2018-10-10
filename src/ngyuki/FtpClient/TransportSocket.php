@@ -68,9 +68,9 @@ class TransportSocket implements TransportInterface
      */
     public function connect($host, $port, $timeout)
     {
-        ASSERT(' is_string($host) && strlen($host) ');
-        ASSERT(' is_int($port)    && ($port    > 0) ');
-        ASSERT(' is_int($timeout) && ($timeout > 0) ');
+        assert(is_string($host) && strlen($host));
+        assert(is_int($port)    && ($port    > 0));
+        assert(is_int($timeout) && ($timeout > 0));
 
         $socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 
@@ -149,7 +149,7 @@ class TransportSocket implements TransportInterface
      */
     public function recvall()
     {
-        ASSERT('is_resource($this->_socket)');
+        assert(is_resource($this->_socket));
 
         $data = array($this->_buffer);
         $this->_buffers = "";
@@ -183,7 +183,7 @@ class TransportSocket implements TransportInterface
      */
     public function recvline()
     {
-        ASSERT('is_resource($this->_socket)');
+        assert(is_resource($this->_socket));
 
         $data = array();
 
@@ -236,8 +236,8 @@ class TransportSocket implements TransportInterface
      */
     public function send($data)
     {
-        ASSERT('is_resource($this->_socket)');
-        ASSERT(' is_string($data) ');
+        assert(is_resource($this->_socket));
+        assert(is_string($data));
 
         while (strlen($data))
         {

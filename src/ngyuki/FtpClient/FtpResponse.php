@@ -32,7 +32,7 @@ class FtpResponse
      */
     public static function fromString($line)
     {
-        ASSERT('is_string($line)');
+        assert(is_string($line));
 
         $code = null;
         $mesg = "";
@@ -70,8 +70,8 @@ class FtpResponse
      */
     public function __construct($code, $mesg, $line = null)
     {
-        ASSERT('is_null($code) || is_int($code)');
-        ASSERT('is_string($mesg)');
+        assert(is_null($code) || is_int($code));
+        assert(is_string($mesg));
 
         if ($line === null)
         {

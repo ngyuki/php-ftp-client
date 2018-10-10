@@ -107,7 +107,7 @@ class TransportControlMock implements TransportInterface
      */
     public function recvline()
     {
-        ASSERT(' $this->_connected ');
+        assert($this->_connected);
 
         $line = array_shift($this->_recvlines);
 

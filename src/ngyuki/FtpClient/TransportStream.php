@@ -166,7 +166,7 @@ class TransportStream implements TransportInterface
      */
     public function recvall()
     {
-        ASSERT('is_resource($this->_stream)');
+        assert(is_resource($this->_stream));
 
         $handler = new ErrorHandler();
 
@@ -212,7 +212,7 @@ class TransportStream implements TransportInterface
      */
     public function recvline()
     {
-        ASSERT('is_resource($this->_stream)');
+        assert(is_resource($this->_stream));
 
         $handler = new ErrorHandler();
 
@@ -258,8 +258,8 @@ class TransportStream implements TransportInterface
      */
     public function send($data)
     {
-        ASSERT(' is_resource($this->_stream) ');
-        ASSERT(' is_string($data) ');
+        assert(is_resource($this->_stream));
+        assert(is_string($data));
 
         $handler = new ErrorHandler();
 
