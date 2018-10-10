@@ -1,5 +1,4 @@
 /vendor
 /composer.phar
-/tests/phpunit.xml
-/tests/phpunit.win.xml
+/phpunit.xml
 /build

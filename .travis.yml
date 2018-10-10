@@ -32,10 +32,10 @@ before_script:
   - mkdir -p build/logs
 
 script:
-  - vendor/bin/phpunit -c tests/phpunit.travis.xml --colors --coverage-text --coverage-clover build/logs/clover.xml
+  - vendor/bin/phpunit -c phpunit.travis.xml --colors --coverage-text --coverage-clover build/logs/clover.xml
 
 after_script:
-  - vendor/bin/coveralls -c tests/coveralls.yml -v
+  - vendor/bin/coveralls -c coveralls.yml -v
 
 branches:
   except:
