@@ -2,11 +2,12 @@
 namespace Tests;
 
 use ngyuki\FtpClient\FileInfo;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author ngyuki
  */
-class FileInfoTest extends \PHPUnit_Framework_TestCase
+class FileInfoTest extends TestCase
 {
     /**
      * @test

@@ -3,13 +3,14 @@ namespace Tests;
 
 use ngyuki\FtpClient\FtpClient;
 use ngyuki\FtpClient\FtpException;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 /**
  * @author ngyuki
  * @group ftpserver
  */
-class RealServerTest extends \PHPUnit_Framework_TestCase
+class RealServerTest extends TestCase
 {
     /**
      * テストに先立って接続とディレクトリを初期化する

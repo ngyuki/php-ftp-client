@@ -2,13 +2,14 @@
 namespace Tests;
 
 use ngyuki\FtpClient\FtpClient;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author ngyuki
  * @group posix
  * @requires function pcntl_fork
  */
-class DummyServerTest extends \PHPUnit_Framework_TestCase
+class DummyServerTest extends TestCase
 {
     private function action($function)
     {

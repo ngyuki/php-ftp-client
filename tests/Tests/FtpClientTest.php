@@ -4,11 +4,12 @@ namespace Tests;
 use ngyuki\FtpClient\FtpClient;
 use ngyuki\FtpClient\FtpResponse;
 use ngyuki\FtpClient\FtpException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author ngyuki
  */
-class FtpClientTest extends \PHPUnit_Framework_TestCase
+class FtpClientTest extends TestCase
 {
     /**
      * @var FtpClient

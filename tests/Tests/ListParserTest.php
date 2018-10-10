@@ -3,11 +3,12 @@ namespace Tests;
 
 use ngyuki\FtpClient\ListParser;
 use ngyuki\FtpClient\FileInfo;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author ngyuki
  */
-class ListParserTest extends \PHPUnit_Framework_TestCase
+class ListParserTest extends TestCase
 {
     private function textize(\ArrayObject $files)
     {

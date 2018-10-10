@@ -2,6 +2,7 @@
 namespace Tests;
 
 use ngyuki\FtpClient\TransportStream;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 /**
@@ -9,7 +10,7 @@ use RuntimeException;
  * @group posix
  * @requires function pcntl_fork
  */
-class TransportStreamTest extends \PHPUnit_Framework_TestCase
+class TransportStreamTest extends TestCase
 {
     protected function createTransport()
     {

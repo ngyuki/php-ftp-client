@@ -2,11 +2,12 @@
 namespace Tests;
 
 use ngyuki\FtpClient\ErrorHandler;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author ngyuki
  */
-class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
+class ErrorHandlerTest extends TestCase
 {
     /**
      * @test
