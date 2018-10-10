@@ -1,5 +1,5 @@
 <?php
-namespace Tests;
+namespace ngyuki\FtpClient\Tests;
 
 use ngyuki\FtpClient\TransportStream;
 use PHPUnit\Framework\TestCase;

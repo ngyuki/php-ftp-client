@@ -1,5 +1,5 @@
 <?php
-namespace Tests;
+namespace ngyuki\FtpClient\Tests;
 
 declare(ticks = 1);
 

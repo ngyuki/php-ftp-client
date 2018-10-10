@@ -1,3 +1,3 @@
 <?php
 $loader = require __DIR__ . '/../vendor/autoload.php';
-$loader->set('Tests', __DIR__);
+$loader->addPsr4('ngyuki\\FtpClient\\Tests\\', __DIR__);
