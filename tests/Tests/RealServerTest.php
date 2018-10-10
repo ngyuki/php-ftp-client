@@ -160,11 +160,6 @@ class RealServerTest extends TestCase
             }
 
             ///
-            $rawlist = $ftp->rawlist(".");
-            $this->assertInternalType("array", $rawlist);
-            $this->assertNotEmpty($rawlist);
-
-            ///
             $ftp->quit();
         }
         catch (RuntimeException $ex)
@@ -276,7 +271,7 @@ class RealServerTest extends TestCase
         $ftp = $this->initFtpClient();
 
         $ftp->mkdir("zxc");
-        $ftp->put(".abc", "");
+        $ftp->put("abc", "");
         $ftp->put("zxc/123", "");
 
         $list = $ftp->getList(".");
@@ -286,7 +281,7 @@ class RealServerTest extends TestCase
         $list = array_combine($keys, $list);
 
         $this->assertCount(2, $list);
-        $this->assertNotEmpty($list['.abc']);
+        $this->assertNotEmpty($list['abc']);
         $this->assertNotEmpty($list['zxc']);
 
         $list = $ftp->getList("zxc");
@@ -307,7 +302,7 @@ class RealServerTest extends TestCase
         $ftp = $this->initFtpClient();
 
         $ftp->mkdir("zxc");
-        $ftp->mkdir("zxc/.abc");
+        $ftp->mkdir("zxc/abc");
 
         $list = $ftp->getRecursiveList(".");
 
@@ -317,7 +312,7 @@ class RealServerTest extends TestCase
 
         $this->assertCount(2, $list);
         $this->assertNotEmpty($list['zxc']);
-        $this->assertNotEmpty($list['zxc/.abc']);
+        $this->assertNotEmpty($list['zxc/abc']);
 
         $list = $ftp->getRecursiveList("zxc");
 
@@ -326,7 +321,7 @@ class RealServerTest extends TestCase
         $list = array_combine($keys, $list);
 
         $this->assertCount(1, $list);
-        $this->assertNotEmpty($list['zxc/.abc']);
+        $this->assertNotEmpty($list['zxc/abc']);
     }
 
     /**

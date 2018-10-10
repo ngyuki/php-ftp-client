@@ -11,7 +11,7 @@ class ErrorHandlerTest extends TestCase
 {
     /**
      * @test
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      * @expectedExceptionCode E_USER_WARNING
      * @expectedExceptionMessage afwe04a54t
      */
@@ -23,7 +23,7 @@ class ErrorHandlerTest extends TestCase
 
     /**
      * @test
-     * @expectedException PHPUnit_Framework_Error_Warning
+     * @expectedException \PHPUnit\Framework\Error\Warning
      * @expectedExceptionCode E_USER_WARNING
      * @expectedExceptionMessage afwe04a54t
      */
@@ -37,7 +37,7 @@ class ErrorHandlerTest extends TestCase
 
     /**
      * @test
-     * @expectedException PHPUnit_Framework_Error_Warning
+     * @expectedException \PHPUnit\Framework\Error\Warning
      * @expectedExceptionCode E_USER_WARNING
      * @expectedExceptionMessage afwe04a54t
      */

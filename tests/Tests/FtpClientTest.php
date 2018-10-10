@@ -38,9 +38,11 @@ class FtpClientTest extends TestCase
      */
     function construct()
     {
-        $ftp = new FtpClient();
-        $ftp = new FtpClient($this->control);
-        $ftp = new FtpClient($this->control, $this->transfer);
+        new FtpClient();
+        new FtpClient($this->control);
+        new FtpClient($this->control, $this->transfer);
+
+        $this->assertTrue(True);
     }
 
     /**
@@ -238,6 +240,8 @@ class FtpClientTest extends TestCase
 
         $this->control->addPattern("/^QUIT\s*$/", "221 bye");
         $this->ftp->quit();
+
+        $this->assertTrue(True);
     }
 
     /**

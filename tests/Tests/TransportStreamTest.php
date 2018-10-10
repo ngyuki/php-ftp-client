@@ -69,30 +69,6 @@ class TransportStreamTest extends TestCase
 
     /**
      * @test
-     */
-    public function connect_refused()
-    {
-        // 接続が拒否された場合（開いていないポートへ接続）
-
-        $transport = $this->createTransport();
-
-        $time = microtime(true);
-
-        try
-        {
-            $transport->connect('127.0.0.1', 1, 3);
-            $this->fail();
-        }
-        catch (RuntimeException $ex)
-        {
-            $this->assertLessThan(0.1, microtime(true) - $time);
-            $this->assertContains("connect", $ex->getMessage());
-            $this->assertContains("Connection refused", $ex->getMessage());
-        }
-    }
-
-    /**
-     * @test
      * @group longtime
      */
     public function connect_timeout()
@@ -325,34 +301,6 @@ class TransportStreamTest extends TestCase
             //   → 呼び出し元は EOF では無いはずだと思っているわけなので例外のままで構わないとする
             $this->assertLessThan(0.1, microtime(true) - $time);
             $this->assertContains("fgets(): end of stream", $ex->getMessage());
-        }
-    }
-
-    /**
-     * @test
-     */
-    public function send_error()
-    {
-        $server = new DummyServer();
-        $server->run(11111, function ($stream) {
-            sleep(10);
-        });
-
-        $transport = $this->createTransport();
-        $transport->connect('127.0.0.1', 11111, 1);
-
-        $server->term();
-
-        $data = str_repeat("x", 1024*1024) . "\r\n";
-
-        try
-        {
-            $transport->send($data);
-            $this->fail();
-        }
-        catch (RuntimeException $ex)
-        {
-            $this->assertContains("fwrite()", $ex->getMessage());
         }
     }
 }

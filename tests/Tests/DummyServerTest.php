@@ -66,6 +66,8 @@ class DummyServerTest extends TestCase
         $ftp->login("as0d5a", "fg54sdf");
 
         $ftp->quit();
+
+        $this->assertTrue(true);
     }
 
     /**
