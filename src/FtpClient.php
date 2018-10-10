@@ -372,12 +372,10 @@ class FtpClient
 
             // データ受信
             $data = $transfer->recvall();
-            $transfer->close();
         }
-        catch (\Exception $ex)
+        finally
         {
             $transfer->close();
-            throw $ex;
         }
 
         // 完了の応答
@@ -397,6 +395,8 @@ class FtpClient
      * @param string $func	呼び出し元関数名
      * @param string $cmd	FTPコマンド
      * @param string $arg	引数
+     *
+     * @return array
      *
      * @throws FtpException
      * @throws TransportException
@@ -427,7 +427,7 @@ class FtpClient
      */
     public function rawlist($dir)
     {
-        return $this->_getlist(__FUNCTION__, 'LIST', $dir, 'A');
+        return $this->_getlist(__FUNCTION__, 'LIST', $dir);
     }
 
     /**
@@ -457,7 +457,7 @@ class FtpClient
      */
     public function getList($dir)
     {
-        $list = $this->_getlist(__FUNCTION__, 'LIST', $dir, 'A');
+        $list = $this->_getlist(__FUNCTION__, 'LIST', $dir);
 
         $parser = new ListParser();
         return $parser->parseByArray($dir, $list);
@@ -475,7 +475,7 @@ class FtpClient
      */
     public function getRecursiveList($dir)
     {
-        $list = $this->_getlist(__FUNCTION__, 'LIST -R', $dir, 'A');
+        $list = $this->_getlist(__FUNCTION__, 'LIST -R', $dir);
 
         $parser = new ListParser();
         return $parser->parseByArray($dir, $list);
@@ -667,6 +667,8 @@ class FtpClient
      *
      * @param string $cmd
      *
+     * @return FtpResponse
+     *
      * @throws TransportException
      */
     private function _sendCommand($cmd)
@@ -697,5 +699,7 @@ class FtpClient
                 return $resp;
             }
         }
+
+        throw new \LogicException();
     }
 }

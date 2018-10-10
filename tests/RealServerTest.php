@@ -1,6 +1,7 @@
 <?php
 namespace ngyuki\FtpClient\Tests;
 
+use ngyuki\FtpClient\FileInfo;
 use ngyuki\FtpClient\FtpClient;
 use ngyuki\FtpClient\FtpException;
 use PHPUnit\Framework\TestCase;
@@ -277,7 +278,7 @@ class RealServerTest extends TestCase
         $list = $ftp->getList(".");
 
         $list = array_values($list->getArrayCopy());
-        $keys = array_map(function ($file) { return $file->getName(); }, $list);
+        $keys = array_map(function (FileInfo $file) { return $file->getName(); }, $list);
         $list = array_combine($keys, $list);
 
         $this->assertCount(2, $list);
@@ -287,7 +288,7 @@ class RealServerTest extends TestCase
         $list = $ftp->getList("zxc");
 
         $list = array_values($list->getArrayCopy());
-        $keys = array_map(function ($file) { return $file->getName(); }, $list);
+        $keys = array_map(function (FileInfo $file) { return $file->getName(); }, $list);
         $list = array_combine($keys, $list);
 
         $this->assertCount(1, $list);
@@ -307,7 +308,7 @@ class RealServerTest extends TestCase
         $list = $ftp->getRecursiveList(".");
 
         $list = array_values($list->getArrayCopy());
-        $keys = array_map(function ($file) { return $file->getName(); }, $list);
+        $keys = array_map(function (FileInfo $file) { return $file->getName(); }, $list);
         $list = array_combine($keys, $list);
 
         $this->assertCount(2, $list);
@@ -317,7 +318,7 @@ class RealServerTest extends TestCase
         $list = $ftp->getRecursiveList("zxc");
 
         $list = array_values($list->getArrayCopy());
-        $keys = array_map(function ($file) { return $file->getName(); }, $list);
+        $keys = array_map(function (FileInfo $file) { return $file->getName(); }, $list);
         $list = array_combine($keys, $list);
 
         $this->assertCount(1, $list);
@@ -350,7 +351,7 @@ class RealServerTest extends TestCase
 
     /**
      * @test
-     * @expectedException ngyuki\FtpClient\FtpException
+     * @expectedException \ngyuki\FtpClient\FtpException
      * @expectedExceptionMessage rename(): RNFR command returned
      */
     function rename_err_rnfr()
@@ -371,7 +372,7 @@ class RealServerTest extends TestCase
 
     /**
      * @test
-     * @expectedException ngyuki\FtpClient\FtpException
+     * @expectedException \ngyuki\FtpClient\FtpException
      * @expectedExceptionMessage rename(): RNTO command returned
      */
     function rename_err_rnto()

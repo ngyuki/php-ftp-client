@@ -17,6 +17,7 @@ class ErrorHandlerTest extends TestCase
      */
     public function test()
     {
+        /** @noinspection PhpUnusedLocalVariableInspection */
         $obj = new ErrorHandler();
         user_error("afwe04a54t", E_USER_WARNING);
     }
@@ -44,6 +45,7 @@ class ErrorHandlerTest extends TestCase
     public function scope()
     {
         call_user_func(function() {
+            /** @noinspection PhpUnusedLocalVariableInspection */
             $obj = new ErrorHandler();
         });
 

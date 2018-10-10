@@ -1,8 +1,6 @@
 <?php
 namespace ngyuki\FtpClient;
 
-use ngyuki\FtpClient\FileInfo;
-
 /**
  * @package   ngyuki\FtpClient
  * @copyright 2012 ngyuki <ngyuki.ts@gmail.com>

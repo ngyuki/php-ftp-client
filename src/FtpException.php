@@ -18,6 +18,7 @@ class FtpException extends \RuntimeException
     /**
      * 文字列から例外を作成
      *
+     * @param string $line
      * @return FtpException
      */
     public static function fromString($line)

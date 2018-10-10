@@ -28,7 +28,7 @@ class DummyServerTest extends TestCase
         {
             $data = trim($data);
             fputs($stream, "999 recv [$data]");
-            throw new Exception("999 recv [$data]");
+            throw new \Exception("999 recv [$data]");
         }
     }
 
@@ -72,7 +72,7 @@ class DummyServerTest extends TestCase
 
     /**
      * @test
-     * @expectedException ngyuki\FtpClient\FtpException
+     * @expectedException \ngyuki\FtpClient\FtpException
      * @expectedExceptionCode 981
      * @expectedExceptionMessage connect(): returned "981 a54rga50sdf5"
      */
@@ -89,7 +89,7 @@ class DummyServerTest extends TestCase
 
     /**
      * @test
-     * @expectedException ngyuki\FtpClient\FtpException
+     * @expectedException \ngyuki\FtpClient\FtpException
      * @expectedExceptionCode 944
      * @expectedExceptionMessage quit(): QUIT command returned "944 gsd04g5sdag5a0"
      */
@@ -130,7 +130,7 @@ class DummyServerTest extends TestCase
 
     /**
      * @test
-     * @expectedException ngyuki\FtpClient\FtpException
+     * @expectedException \ngyuki\FtpClient\FtpException
      * @expectedExceptionCode 917
      * @expectedExceptionMessage login(): USER command returned "917 asdfafr"
      */
@@ -151,7 +151,7 @@ class DummyServerTest extends TestCase
 
     /**
      * @test
-     * @expectedException ngyuki\FtpClient\FtpException
+     * @expectedException \ngyuki\FtpClient\FtpException
      * @expectedExceptionCode 914
      * @expectedExceptionMessage login(): PASS command returned "914 asfdsa4d1a0."
      */

@@ -9,13 +9,6 @@ declare(ticks = 1);
 class DummyServer
 {
     /**
-     * 子プロセスのコンテキストで実行するアクション
-     *
-     * @var mixed
-     */
-    private $_action;
-
-    /**
      * 子プロセス
      *
      * @var ProcessFork
@@ -33,7 +26,8 @@ class DummyServer
     /**
      * サーバの実行
      *
-     * @throws Exception
+     * @param $port
+     * @param $action
      */
     public function run($port, $action)
     {

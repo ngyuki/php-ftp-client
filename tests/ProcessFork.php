@@ -26,7 +26,7 @@ class ProcessFork
     /**
      * サーバの実行
      *
-     * @throws Exception
+     * @param $action
      */
     public function fork($action)
     {
@@ -79,7 +79,7 @@ class ProcessFork
             if (pcntl_waitpid($pid, $st, WNOHANG) == 0)
             {
                 posix_kill($pid, SIGTERM);
-                $ret = pcntl_waitpid($pid, $st);
+                pcntl_waitpid($pid, $st);
             }
 
             $this->_pid = null;
@@ -104,7 +104,7 @@ class ProcessFork
         });
 
         // 未処理の例外で終了
-        set_exception_handler(function ($ex) use ($self) {
+        set_exception_handler(function () use ($self) {
             $self->term();
         });
 

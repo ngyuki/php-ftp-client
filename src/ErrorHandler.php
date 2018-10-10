@@ -46,7 +46,7 @@ class ErrorHandler
     /**
      * エラーハンドラ
      *
-     * @return Closure
+     * @return \Closure
      */
     private static function _handler()
     {

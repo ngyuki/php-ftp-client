@@ -47,6 +47,10 @@ class TransportTransferMock implements TransportInterface
 
     /**
      * @see \ngyuki\FtpClient\TransportInterface::connect()
+     *
+     * @param $host
+     * @param $port
+     * @param $timeout
      */
     public function connect($host, $port, $timeout)
     {
@@ -105,6 +109,8 @@ class TransportTransferMock implements TransportInterface
 
     /**
      * @see \ngyuki\FtpClient\TransportInterface::send()
+     *
+     * @param $data
      */
     public function send($data)
     {

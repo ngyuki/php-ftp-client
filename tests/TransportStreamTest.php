@@ -160,8 +160,6 @@ class TransportStreamTest extends TestCase
         $transport = $this->createTransport();
         $transport->connect('127.0.0.1', 11111, 2);
 
-        $time = microtime(true);
-
         $recv = $transport->recvall();
         $this->assertSame("", $recv);
 
@@ -197,8 +195,6 @@ class TransportStreamTest extends TestCase
 
         $transport = $this->createTransport();
         $transport->connect('127.0.0.1', 11111, 2);
-
-        $time = microtime(true);
 
         $recv = $transport->recvall();
         $this->assertSame($data, $recv);

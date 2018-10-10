@@ -37,11 +37,11 @@ class FtpExceptionTest extends TestCase
 
     /**
      * @test
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage unable parse response string.
      */
     public function fromString_invalid()
     {
-        $obj = FtpException::fromString("xxx");
+        FtpException::fromString("xxx");
     }
 }

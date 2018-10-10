@@ -17,7 +17,7 @@ class ListParserTest extends TestCase
         /* @var $file FileInfo */
         foreach ($files as $file)
         {
-            $file instanceof FileInfo;
+            assert($file instanceof FileInfo);
 
             $name = $file->getName();
 

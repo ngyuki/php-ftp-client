@@ -246,7 +246,7 @@ class FtpClientTest extends TestCase
 
     /**
      * @test
-     * @expectedException ngyuki\FtpClient\FtpException
+     * @expectedException \ngyuki\FtpClient\FtpException
      * @expectedExceptionCode 789
      * @expectedExceptionMessage quit(): QUIT command returned
      */
@@ -265,7 +265,7 @@ class FtpClientTest extends TestCase
 
     /**
      * @test
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      * @expectedExceptionMessage recvline is empty
      */
     function quit_error_noresp()
@@ -281,7 +281,7 @@ class FtpClientTest extends TestCase
 
     /**
      * @test
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      * @expectedExceptionMessage patterns is empty
      */
     function quit_error_senderror()

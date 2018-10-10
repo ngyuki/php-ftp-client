@@ -7,6 +7,10 @@ namespace ngyuki\FtpClient;
  * @author    ngyuki <ngyuki.ts@gmail.com>
  * @license   http://www.opensource.org/licenses/mit-license.php  MIT License
  * @link      https://github.com/ngyuki/php-ftp-client
+ *
+ * @property string $line
+ * @property int    $code
+ * @property string $mesg
  */
 class FtpResponse
 {
@@ -28,6 +32,7 @@ class FtpResponse
     /**
      * 文字列からレスポンスオブジェクトを作成
      *
+     * @param string $line
      * @return FtpResponse|null
      */
     public static function fromString($line)
@@ -102,6 +107,7 @@ class FtpResponse
      * マジックメソッド __get
      *
      * @param string $name
+     * @return mixed
      */
     public function __get($name)
     {
