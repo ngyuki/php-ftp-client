@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  php:
+    image: ngyuki/php-dev:7.0
+    depends_on:
+      - ftp
+    environment:
+      FTP_HOST: ftp
+      FTP_PORT: 21
+      FTP_USER: test
+      FTP_PASS: pass
+      FTP_BASE: /ftp/
+      INVALID_USER: abc
+      INVALID_PASS: xyz
+      REFUSE_PORT: 1
+    command:
+      - sh
+      - -c
+      - |
+        composer install -o
+        php -v
+    working_dir: /app
+    volumes:
+      - .:/app:rw
+      - vendor:/app/vendor:rw
+      - ftp:/ftp:rw
+
+  ftp:
+    build: ./docker/ftp/
+    volumes:
+      - ftp:/ftp:rw
+    command:
+      - proftpd
+      - -n
+      - -S
+      - 0.0.0.0
+
+volumes:
+  vendor:
+  ftp:
